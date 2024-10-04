@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   NOT_FOUND_MESSAGE,
   PASSWORDS_NOT_MATCH,
@@ -9,6 +14,7 @@ import { PasswordService } from './password.service';
 import { CreateUserDto } from '../dtos/crudUser.dto';
 import { UserFiltersModel } from '../models/user.model';
 import { Users } from 'src/shared/entities/users.entity';
+import { INVALID_ACCESS_DATA_MESSAGE } from 'src/auth/constants/messages.constants';
 
 @Injectable()
 export class CrudUserService {
@@ -50,12 +56,19 @@ export class CrudUserService {
     await this.userRepository.delete(userId);
   }
 
-  async findOneByParams(params: UserFiltersModel): Promise<Users> {
+  async findOneByParams(
+    params: UserFiltersModel,
+    login: boolean = false,
+  ): Promise<Users> {
     const user = await this.userRepository.findOne({
       where: { ...params },
     });
     if (!user) {
-      throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      if (!login) {
+        throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      } else {
+        throw new UnauthorizedException(INVALID_ACCESS_DATA_MESSAGE);
+      }
     }
     return user;
   }

@@ -25,9 +25,12 @@ export class AuthService {
     private readonly accessSessionsService: AccessSessionsService,
   ) {}
   async signIn(body: SingInBodyDto) {
-    const userExists = await this.crudUserService.findOneByParams({
-      email: body.email,
-    });
+    const userExists = await this.crudUserService.findOneByParams(
+      {
+        email: body.email,
+      },
+      true,
+    );
 
     const passwordMatch = await this.passwordService.compare(
       body.password,
