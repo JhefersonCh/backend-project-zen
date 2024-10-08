@@ -4,7 +4,7 @@ export interface UserBaseModel {
   fullName?: string;
   avatarUrl?: string;
   username?: string;
-  phone?: number;
+  phone?: string;
   email?: string;
   password?: string;
   createdAt?: Date;

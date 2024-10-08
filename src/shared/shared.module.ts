@@ -12,6 +12,8 @@ import { AccessSessionsService } from 'src/auth/services/accessSessions.service'
 import { UserRepository } from './repositories/user.repository';
 import { AccessSessionsRepository } from './repositories/accessSessions.repository';
 import { AccessSessions } from './entities/accessSessions.entity';
+import { IdentificationTypes } from './entities/identificationTypes.entity';
+import { Roles } from './entities/roles.entity';
 
 @Module({})
 export class SharedModule {
@@ -32,7 +34,12 @@ export class SharedModule {
             autoLoadEntities: true,
           }),
         }),
-        TypeOrmModule.forFeature([Users, AccessSessions]),
+        TypeOrmModule.forFeature([
+          Users,
+          AccessSessions,
+          IdentificationTypes,
+          Roles,
+        ]),
         PassportModule,
         JwtModule.registerAsync({
           inject: [ConfigService],

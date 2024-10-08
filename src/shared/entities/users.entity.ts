@@ -3,15 +3,41 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
+import { IdentificationTypes } from './identificationTypes.entity';
+import { Roles } from './roles.entity';
 @Entity({ name: 'Users' })
 export class Users {
   @PrimaryColumn('uuid')
   id: string;
+
+  @ManyToOne(() => IdentificationTypes, (idType) => idType.id, {
+    nullable: false,
+    eager: true,
+  })
+  identificationType: IdentificationTypes;
+
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  identificationTypeId: number;
+
+  @ManyToOne(() => Roles, (role) => role.id, {
+    nullable: false,
+    eager: true,
+  })
+  role: Roles;
+
+  @Column('int', {
+    nullable: false,
+  })
+  roleId: number;
 
   @Column('varchar', {
     length: 100,
@@ -36,10 +62,10 @@ export class Users {
   })
   username?: string;
 
-  @Column('int', {
+  @Column('varchar', {
     nullable: true,
   })
-  phone?: number;
+  phone?: string;
 
   @Column('varchar', {
     length: 255,

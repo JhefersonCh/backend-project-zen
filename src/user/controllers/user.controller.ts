@@ -1,10 +1,15 @@
-import { DELETED_RESPONSE } from '../../shared/constants/response.constant';
+import {
+  DELETED_RESPONSE,
+  UPDATED_RESPONSE,
+} from '../../shared/constants/response.constant';
 import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -15,12 +20,14 @@ import {
   ApiCreatedResponse,
   ApiDefaultResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 // import { AuthGuard } from 'src/auth/guards/auth.guard';
 import {
   CREATED_MESSAGE,
   DELETED_MESSAGE,
+  UPDATED_MESSAGE,
 } from 'src/shared/constants/messages.constant';
 import {
   CREATED_RESPONSE,
@@ -30,8 +37,13 @@ import {
 import {
   CreatedRecordResponseDto,
   DeleteReCordResponseDto,
+  UpdateRecordResponseDto,
 } from 'src/shared/dtos/response.dto';
-import { CreateUserDto } from 'src/user/dtos/crudUser.dto';
+import {
+  CreateUserDto,
+  GetUserResponseDto,
+  UpdateUserDto,
+} from 'src/user/dtos/crudUser.dto';
 import { CrudUserUseCase } from 'src/user/useCases/crudUser.UC';
 
 @Controller('user')
@@ -44,7 +56,7 @@ export class UserController {
   async register(
     @Body() user: CreateUserDto,
   ): Promise<CreatedRecordResponseDto> {
-    const rowId = await this.crudUserUseCase.create(user);
+    const rowId = await this.crudUserUseCase.create(user, 1);
 
     return {
       message: CREATED_MESSAGE,
@@ -65,6 +77,47 @@ export class UserController {
 
     return {
       message: DELETED_MESSAGE,
+      statusCode: HttpStatus.OK,
+    };
+  }
+
+  @Get('/:userId')
+  @ApiOkResponse({ type: GetUserResponseDto })
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getUserById(
+    @Param('userId') userId: string,
+  ): Promise<GetUserResponseDto> {
+    const user = await this.crudUserUseCase.findOneByParams({ id: userId });
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        createdAt: user.createdAt,
+        identification: user.identification,
+        email: user.email,
+        fullName: user.fullName,
+        username: user.username,
+        phone: user.phone,
+        avatarUrl: user.avatarUrl,
+        roleId: user.roleId,
+        identificationTypeId: user.identificationTypeId,
+      },
+    };
+  }
+
+  @Patch('/:userId')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async updateUser(
+    @Param('userId') userId: string,
+    @Body() body: UpdateUserDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.crudUserUseCase.update(userId, body);
+    return {
+      message: UPDATED_MESSAGE,
       statusCode: HttpStatus.OK,
     };
   }

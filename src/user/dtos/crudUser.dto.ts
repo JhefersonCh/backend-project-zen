@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Users } from 'src/shared/entities/users.entity';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { BaseResponseDto } from 'src/shared/dtos/response.dto';
+import { HttpStatus } from '@nestjs/common';
+import { USER_DATA_RESPONSE_EXAMPLE } from '../constants/user.constant';
 
 export class UserDto implements Partial<Users> {
   @ApiProperty({
@@ -18,6 +27,14 @@ export class UserDto implements Partial<Users> {
   })
   @IsString()
   identification: string;
+
+  @ApiProperty({
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @IsNumber()
+  identificationTypeId: number;
 
   @ApiProperty({
     type: String,
@@ -45,12 +62,12 @@ export class UserDto implements Partial<Users> {
   username?: string;
 
   @ApiProperty({
-    type: Number,
+    type: String,
     required: false,
     example: 912345678,
   })
   @IsOptional()
-  phone?: number;
+  phone?: string;
 
   @ApiProperty({
     type: String,
@@ -95,6 +112,14 @@ export class CreateUserDto extends UserDto {
   password: string;
 
   @ApiProperty({
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @IsNumber()
+  identificationTypeId: number;
+
+  @ApiProperty({
     type: String,
     required: true,
     example: '********',
@@ -102,4 +127,77 @@ export class CreateUserDto extends UserDto {
   @IsString()
   @IsNotEmpty()
   passwordConfirmation: string;
+}
+
+export interface UserDataResponse {
+  fullName: string;
+  identificationTypeId: number;
+  roleId: number;
+  identification: string;
+  username: string;
+  email: string;
+  createdAt: Date;
+  phone: string;
+  avatarUrl: string;
+}
+
+export class UpdateUserDto {
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: '@john.doe',
+  })
+  @IsString()
+  @IsOptional()
+  username?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'John Doe',
+  })
+  @IsString()
+  @IsOptional()
+  fullName?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: '321645789',
+  })
+  @IsNumber()
+  @IsOptional()
+  phone?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'www.example.com',
+  })
+  @IsString()
+  @IsOptional()
+  avatarUrl?: string;
+
+  // @ApiProperty({
+  //   type: String,
+  //   required: false,
+  //   example: 'john.doe@example.com',
+  // })
+  // @IsString()
+  // @IsEmail()
+  // @IsOptional()
+  // email?: string;
+}
+
+export class GetUserResponseDto implements BaseResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+  @ApiProperty({
+    type: Object,
+    example: USER_DATA_RESPONSE_EXAMPLE,
+  })
+  data: UserDataResponse;
 }
