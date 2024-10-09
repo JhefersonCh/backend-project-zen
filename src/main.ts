@@ -28,6 +28,8 @@ async function bootstrap() {
     }),
   );
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('ProjectZen API')
     .setDescription('API for managing the web app "ProjectZen"')
@@ -36,7 +38,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api/docs', app, document);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
