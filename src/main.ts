@@ -10,7 +10,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: false });
 
   app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -45,15 +45,21 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   const allowedHeaders = configService.get('app.cors.allowedHeaders');
   const allowedMethods = configService.get('app.cors.allowedMethods');
+
   app.enableCors({
     origin: true,
     allowedHeaders,
     methods: allowedMethods,
     credentials: true,
   });
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   await app.listen(configService.get<number>('APP_PORT') || 3000);
 }
 bootstrap();
