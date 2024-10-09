@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CrudUserService } from '../services/crudUser.service';
-import { CreateUserDto, UpdateUserDto } from '../dtos/crudUser.dto';
+import { RegisterDto, UpdateUserDto } from '../dtos/crudUser.dto';
 import { UserFiltersModel } from '../models/user.model';
 
 @Injectable()
 export class CrudUserUseCase {
   constructor(private userService: CrudUserService) {}
-  async create(user: CreateUserDto, roleId: number) {
+  async create(user: RegisterDto, roleId: number) {
     return await this.userService.create(user, roleId);
   }
 

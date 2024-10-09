@@ -78,7 +78,7 @@ export class UserDto implements Partial<Users> {
   email: string;
 }
 
-export class CreateUserDto extends UserDto {
+export class RegisterDto extends UserDto {
   @ApiProperty({
     type: String,
     required: true,
@@ -127,6 +127,17 @@ export class CreateUserDto extends UserDto {
   @IsString()
   @IsNotEmpty()
   passwordConfirmation: string;
+}
+
+export class CreateUserDto extends RegisterDto {
+  @ApiProperty({
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  roleId: number;
 }
 
 export interface UserDataResponse {

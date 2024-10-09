@@ -11,7 +11,7 @@ import {
 import { DUPLICATED_RESPONSE } from 'src/shared/constants/response.constant';
 import { UserRepository } from 'src/shared/repositories/user.repository';
 import { PasswordService } from './password.service';
-import { CreateUserDto, UpdateUserDto } from '../dtos/crudUser.dto';
+import { RegisterDto, UpdateUserDto } from '../dtos/crudUser.dto';
 import { UserFiltersModel } from '../models/user.model';
 import { Users } from 'src/shared/entities/users.entity';
 import { INVALID_ACCESS_DATA_MESSAGE } from 'src/auth/constants/messages.constants';
@@ -23,10 +23,7 @@ export class CrudUserService {
     private readonly passwrodService: PasswordService,
   ) {}
 
-  async create(
-    user: CreateUserDto,
-    roleId: number,
-  ): Promise<{ rowId: string }> {
+  async create(user: RegisterDto, roleId: number): Promise<{ rowId: string }> {
     const userExists = await this.userRepository.findOne({
       where: [
         { identification: user.identification },

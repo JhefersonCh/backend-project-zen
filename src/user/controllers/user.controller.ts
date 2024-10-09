@@ -38,9 +38,10 @@ import {
 } from '@nestjs/swagger';
 import { CrudUserUseCase } from '../useCases/crudUser.UC';
 import {
-  CreateUserDto,
+  RegisterDto,
   GetUserResponseDto,
   UpdateUserDto,
+  CreateUserDto,
 } from '../dtos/crudUser.dto';
 
 @Controller('user')
@@ -50,9 +51,7 @@ export class UserController {
   @Post('/register')
   @ApiCreatedResponse(CREATED_RESPONSE)
   @ApiConflictResponse(DUPLICATED_RESPONSE)
-  async register(
-    @Body() user: CreateUserDto,
-  ): Promise<CreatedRecordResponseDto> {
+  async register(@Body() user: RegisterDto): Promise<CreatedRecordResponseDto> {
     const rowId = await this.crudUserUseCase.create(user, 1);
 
     return {
@@ -116,6 +115,22 @@ export class UserController {
     return {
       message: UPDATED_MESSAGE,
       statusCode: HttpStatus.OK,
+    };
+  }
+
+  @Post('/create')
+  @ApiCreatedResponse(CREATED_RESPONSE)
+  @ApiConflictResponse(DUPLICATED_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async createUser(
+    @Body() user: CreateUserDto,
+  ): Promise<CreatedRecordResponseDto> {
+    const rowId = await this.crudUserUseCase.create(user, user.roleId);
+    return {
+      message: CREATED_MESSAGE,
+      statusCode: HttpStatus.CREATED,
+      data: rowId,
     };
   }
 }

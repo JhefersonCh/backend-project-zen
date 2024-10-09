@@ -14,6 +14,18 @@ import { AccessSessionsRepository } from './repositories/accessSessions.reposito
 import { AccessSessions } from './entities/accessSessions.entity';
 import { IdentificationTypes } from './entities/identificationTypes.entity';
 import { Roles } from './entities/roles.entity';
+import { TaskTags } from './entities/taskTags.entity';
+import { Tasks } from './entities/tasks.entity';
+import { Tags } from './entities/tags.entity';
+import { Status } from './entities/status.entity';
+import { Projects } from './entities/projects.entity';
+import { ProjectRoles } from './entities/projectRoles.entity';
+import { ProjectCategories } from './entities/projectCategories.entity';
+import { Priorities } from './entities/priorities.entity';
+import { Members } from './entities/members.entity';
+import { Comments } from './entities/comments.entity';
+import { Categories } from './entities/categories.entity';
+import { Assignments } from './entities/assignments.entity';
 
 @Module({})
 export class SharedModule {
@@ -39,6 +51,18 @@ export class SharedModule {
           AccessSessions,
           IdentificationTypes,
           Roles,
+          TaskTags,
+          Tasks,
+          Tags,
+          Status,
+          Projects,
+          ProjectRoles,
+          ProjectCategories,
+          Priorities,
+          Members,
+          Comments,
+          Categories,
+          Assignments,
         ]),
         PassportModule,
         JwtModule.registerAsync({

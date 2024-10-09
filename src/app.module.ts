@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { join } from 'path';
     SharedModule.forRoot(),
     UserModule,
     AuthModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

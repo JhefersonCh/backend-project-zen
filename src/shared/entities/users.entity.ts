@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +12,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { IdentificationTypes } from './identificationTypes.entity';
 import { Roles } from './roles.entity';
+import { Assignments } from './assignments.entity';
 @Entity({ name: 'Users' })
 export class Users {
   @PrimaryColumn('uuid')
@@ -94,4 +96,7 @@ export class Users {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @OneToMany(() => Assignments, (assignment) => assignment.user)
+  assignments: Assignments[];
 }
