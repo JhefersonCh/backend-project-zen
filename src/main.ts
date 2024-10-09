@@ -23,7 +23,7 @@ async function bootstrap() {
     configService.get<string>('SWAGGER_PASSWORD') || 'password123';
 
   app.use(
-    '/docs',
+    '/api/docs',
     basicAuth({
       challenge: true,
       users: { [swaggerUser]: swaggerPassword },
