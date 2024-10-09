@@ -1,7 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import basicAuth = require('express-basic-auth');
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as basicAuth from 'express-basic-auth';
+
 import { ConfigService } from '@nestjs/config';
 import * as bodyParser from 'body-parser';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
@@ -46,7 +48,7 @@ async function bootstrap() {
   const allowedHeaders = configService.get('app.cors.allowedHeaders');
   const allowedMethods = configService.get('app.cors.allowedMethods');
   app.enableCors({
-    origin: true, // origin,
+    origin: true,
     allowedHeaders,
     methods: allowedMethods,
     credentials: true,
