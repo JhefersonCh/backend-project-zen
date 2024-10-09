@@ -8,11 +8,16 @@
   ],
   "routes": [
     {
-      "src": "/docs/(.*)",
-      "dest": "/src/main.ts"
+      "src": "/api/docs/swagger-ui-standalone-preset.js",
+      "dest": "/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/api/docs/swagger-ui-bundle.js",
+      "dest": "/node_modules/swagger-ui-dist/swagger-ui-bundle.js"
+    },
+    {
+      "src": "/api/docs/(.*)",
+      "dest": "/src/main.ts"
     },
     {
       "src": "/(.*)",
