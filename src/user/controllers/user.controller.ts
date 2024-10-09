@@ -1,5 +1,18 @@
 import {
+  CreatedRecordResponseDto,
+  DeleteReCordResponseDto,
+  UpdateRecordResponseDto,
+} from './../../shared/dtos/response.dto';
+import {
+  CREATED_MESSAGE,
+  DELETED_MESSAGE,
+  UPDATED_MESSAGE,
+} from './../../shared/constants/messages.constant';
+import {
+  CREATED_RESPONSE,
   DELETED_RESPONSE,
+  DUPLICATED_RESPONSE,
+  NOT_FOUND_RESPONSE,
   UPDATED_RESPONSE,
 } from '../../shared/constants/response.constant';
 import {
@@ -23,28 +36,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-// import { AuthGuard } from 'src/auth/guards/auth.guard';
-import {
-  CREATED_MESSAGE,
-  DELETED_MESSAGE,
-  UPDATED_MESSAGE,
-} from 'src/shared/constants/messages.constant';
-import {
-  CREATED_RESPONSE,
-  DUPLICATED_RESPONSE,
-  NOT_FOUND_RESPONSE,
-} from 'src/shared/constants/response.constant';
-import {
-  CreatedRecordResponseDto,
-  DeleteReCordResponseDto,
-  UpdateRecordResponseDto,
-} from 'src/shared/dtos/response.dto';
+import { CrudUserUseCase } from '../useCases/crudUser.UC';
 import {
   CreateUserDto,
   GetUserResponseDto,
   UpdateUserDto,
-} from 'src/user/dtos/crudUser.dto';
-import { CrudUserUseCase } from 'src/user/useCases/crudUser.UC';
+} from '../dtos/crudUser.dto';
 
 @Controller('user')
 @ApiTags('Usuarios')
