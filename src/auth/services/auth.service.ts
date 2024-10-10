@@ -27,7 +27,8 @@ export class AuthService {
   async signIn(body: SingInBodyDto) {
     const userExists = await this.crudUserService.findOneByParams(
       {
-        email: body.email,
+        where: { email: body.email },
+        relations: 'roles',
       },
       true,
     );
@@ -55,6 +56,7 @@ export class AuthService {
       user: {
         email: userExists.email,
         id: userExists.id,
+        role: userExists.role,
       },
       session: {
         accessSessionId,
@@ -144,7 +146,9 @@ export class AuthService {
     token?: string;
     refreshToken?: string;
   }) {
-    const user = await this.crudUserService.findOneByParams({ id: userId });
+    const user = await this.crudUserService.findOneByParams({
+      where: { id: userId },
+    });
     let payload;
     try {
       payload = this.jwtService.verify(token ?? refreshToken, {

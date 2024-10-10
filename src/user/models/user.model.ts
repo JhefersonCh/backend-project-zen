@@ -14,6 +14,11 @@ export interface UserBaseModel {
 }
 
 export interface UserFiltersModel {
+  where?: UserWhereModel;
+  relations?: 'roles';
+}
+
+export interface UserWhereModel {
   id?: string;
   identification?: string;
   email?: string;

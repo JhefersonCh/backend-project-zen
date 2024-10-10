@@ -53,7 +53,7 @@ export class CrudUserService {
 
   async delete(userId: string): Promise<void> {
     const userExists = await this.findOneByParams({
-      id: userId,
+      where: { id: userId },
     });
     if (!userExists) {
       throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
@@ -66,7 +66,7 @@ export class CrudUserService {
     login: boolean = false,
   ): Promise<Users> {
     const user = await this.userRepository.findOne({
-      where: { ...params },
+      where: { ...params.where },
     });
     if (!user) {
       if (!login) {

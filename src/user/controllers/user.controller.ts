@@ -52,7 +52,7 @@ export class UserController {
   @ApiCreatedResponse(CREATED_RESPONSE)
   @ApiConflictResponse(DUPLICATED_RESPONSE)
   async register(@Body() user: RegisterDto): Promise<CreatedRecordResponseDto> {
-    const rowId = await this.crudUserUseCase.create(user, 1);
+    const rowId = await this.crudUserUseCase.create(user, 3);
 
     return {
       message: CREATED_MESSAGE,
@@ -85,7 +85,9 @@ export class UserController {
   async getUserById(
     @Param('userId') userId: string,
   ): Promise<GetUserResponseDto> {
-    const user = await this.crudUserUseCase.findOneByParams({ id: userId });
+    const user = await this.crudUserUseCase.findOneByParams({
+      where: { id: userId },
+    });
     return {
       statusCode: HttpStatus.OK,
       data: {

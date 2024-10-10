@@ -19,7 +19,9 @@ export class CrudUserUseCase {
   }
 
   async update(userId: string, params: UpdateUserDto) {
-    const user = await this.userService.findOneByParams({ id: userId });
+    const user = await this.userService.findOneByParams({
+      where: { id: userId },
+    });
     return user && (await this.userService.update(userId, params));
   }
 }
