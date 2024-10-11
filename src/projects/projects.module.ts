@@ -11,6 +11,7 @@ import { CrudCategoriesService } from './services/crudCategories.service';
 import { CrudProjectsService } from './services/crudProjects.service';
 import { ProjectsUseCase } from './useCases/projects.UC';
 import { ProjectsService } from './services/projects.service';
+import { MembersRepository } from './../shared/repositories/members.repository';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProjectsService } from './services/projects.service';
     CrudProjectsService,
     ProjectsUseCase,
     ProjectsService,
+    MembersRepository,
   ],
   exports: [],
 })

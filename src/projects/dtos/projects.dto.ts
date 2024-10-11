@@ -161,3 +161,29 @@ export class ProjectsRelatedDataReponseDto implements BaseResponseDto {
   })
   data: ProjectsRelatedDataDto;
 }
+
+export class MemberToProjectDto {
+  @ApiProperty({ type: Number, example: 1, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  projectId: number;
+  @ApiProperty({ type: String, example: 'uuid', required: true })
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+  @ApiProperty({ type: Number, example: 1, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  projectRoleId: number;
+}
+
+export class DeleteMemberFromProjectDto {
+  @ApiProperty({ type: Number, example: 1, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  projectId: number;
+  @ApiProperty({ type: String, example: 'uuid', required: true })
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+}

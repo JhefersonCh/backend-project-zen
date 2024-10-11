@@ -6,17 +6,24 @@ import { CrudProjectsService } from '../services/crudProjects.service';
 export class CrudProjectsUseCase {
   constructor(private readonly _crudProjectsService: CrudProjectsService) {}
 
-  async create(body: CreateProjectDto) {
-    return await this._crudProjectsService.create({
-      categoryIds: body.categoryIds,
-      title: body.title,
-      description: body.description,
-      finishDate: body.finishDate,
-    });
+  async create(body: CreateProjectDto, userId: string) {
+    return await this._crudProjectsService.create(
+      {
+        categoryIds: body.categoryIds,
+        title: body.title,
+        description: body.description,
+        finishDate: body.finishDate,
+      },
+      userId,
+    );
   }
 
   async findAllProjects() {
     return await this._crudProjectsService.findAll();
+  }
+
+  async findAllByUserId(userId: string) {
+    return await this._crudProjectsService.findAllByUserId(userId);
   }
 
   async findOneProjectById(id: number) {

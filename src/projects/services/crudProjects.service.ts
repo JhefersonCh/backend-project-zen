@@ -1,3 +1,4 @@
+import { MembersRepository } from './../../shared/repositories/members.repository';
 import { NOT_FOUND_RESPONSE } from './../../shared/constants/response.constant';
 import { Projects } from './../../shared/entities/projects.entity';
 import { ProjectModel } from '../models/projects.model';
@@ -14,9 +15,13 @@ export class CrudProjectsService {
   constructor(
     private readonly _projectsRepo: ProjectRepository,
     private readonly _projectCategoriesRepo: ProjectCategoriesRepository,
+    private readonly _membersRepo: MembersRepository,
   ) {}
 
-  async create(projectModel: ProjectModel): Promise<{ rowId: string }> {
+  async create(
+    projectModel: ProjectModel,
+    userId: string,
+  ): Promise<{ rowId: string }> {
     try {
       const insertResult = await this._projectsRepo.insert(projectModel);
       const newProject = insertResult?.identifiers[0];
@@ -36,6 +41,14 @@ export class CrudProjectsService {
         );
       }
 
+      if (userId) {
+        await this._membersRepo.insert({
+          userId,
+          projectRoleId: 1,
+          projectId: newProject.id,
+        });
+      }
+
       return { rowId: newProject.id };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
@@ -53,6 +66,17 @@ export class CrudProjectsService {
 
     const results = await query.getMany();
     return results;
+  }
+
+  async findAllByUserId(userId: string): Promise<Projects[]> {
+    const query = this._projectsRepo
+      .createQueryBuilder('projects')
+      .innerJoinAndSelect('projects.projectCategories', 'pc')
+      .innerJoinAndSelect('pc.category', 'cat')
+      .innerJoin('projects.members', 'memb')
+      .where('memb.userId = :userId', { userId });
+
+    return await query.getMany();
   }
 
   async findOneById(id: number): Promise<Projects> {
