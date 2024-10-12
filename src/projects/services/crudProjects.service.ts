@@ -75,7 +75,9 @@ export class CrudProjectsService {
       .createQueryBuilder('projects')
       .innerJoinAndSelect('projects.projectCategories', 'pc')
       .innerJoinAndSelect('pc.category', 'cat')
-      .innerJoin('projects.members', 'memb')
+      .innerJoinAndSelect('projects.members', 'memb')
+      .innerJoinAndSelect('memb.user', 'user')
+      .innerJoinAndSelect('memb.projectRole', 'projectRole')
       .where('memb.userId = :userId', { userId });
 
     return await query.getMany();
