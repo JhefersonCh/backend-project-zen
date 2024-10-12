@@ -39,4 +39,8 @@ export class CrudProjectsUseCase {
       finishDate: body.finishDate,
     });
   }
+
+  async delete(id: number, userId: string) {
+    await this._crudProjectsService.delete(id, userId);
+  }
 }

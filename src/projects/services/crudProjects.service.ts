@@ -5,6 +5,8 @@ import { ProjectModel } from '../models/projects.model';
 import { ProjectRepository } from './../../shared/repositories/project.repository';
 import { ProjectCategoriesRepository } from './../../shared/repositories/projectCategories.repository';
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -118,5 +120,29 @@ export class CrudProjectsService {
         }),
       );
     }
+  }
+
+  async delete(id: number, userId: string) {
+    const projectExists = await this._projectsRepo.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!projectExists) {
+      throw new NotFoundException(NOT_FOUND_RESPONSE);
+    }
+    const userLeader = await this._membersRepo.findOne({
+      where: { userId, projectId: id },
+    });
+
+    if (!userLeader || userLeader.projectRoleId !== 1) {
+      throw new HttpException(
+        'No está autorizado para eliminar este proyecto.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    await this._projectsRepo.softDelete(id);
+    await this._projectCategoriesRepo.softDelete({ projectId: id });
+    await this._membersRepo.softDelete({ projectId: id });
   }
 }

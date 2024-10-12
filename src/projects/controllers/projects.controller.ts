@@ -225,4 +225,20 @@ export class ProjectsController {
       message: DELETED_MESSAGE,
     };
   }
+
+  @Delete('/:id')
+  @ApiOkResponse(DELETED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async deleteProject(
+    @Param('id') id: number,
+    @Req() req,
+  ): Promise<DeleteReCordResponseDto> {
+    await this._crudProjectsUC.delete(id, req.user.id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: DELETED_MESSAGE,
+    };
+  }
 }
