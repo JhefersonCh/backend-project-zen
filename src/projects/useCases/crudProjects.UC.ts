@@ -26,8 +26,8 @@ export class CrudProjectsUseCase {
     return await this._crudProjectsService.findAllByUserId(userId);
   }
 
-  async findOneProjectById(id: number) {
-    return await this._crudProjectsService.findOneById(id);
+  async findOneProjectById(id: number, userId: string) {
+    return await this._crudProjectsService.findOneById(id, userId);
   }
 
   async update(body: UpdateProjectDto) {

@@ -165,8 +165,9 @@ export class ProjectsController {
   @UseGuards(AuthGuard())
   async getProjectById(
     @Param('id') id: number,
+    @Req() req,
   ): Promise<GetOneProjectResponseDto> {
-    const data = await this._crudProjectsUC.findOneProjectById(id);
+    const data = await this._crudProjectsUC.findOneProjectById(id, req.user.id);
 
     return {
       statusCode: HttpStatus.CREATED,

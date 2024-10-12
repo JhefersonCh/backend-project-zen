@@ -81,11 +81,24 @@ export class CrudProjectsService {
     return await query.getMany();
   }
 
-  async findOneById(id: number): Promise<Projects> {
+  async findOneById(id: number, userId: string): Promise<Projects> {
+    const userIsMember = await this._membersRepo.findOne({
+      where: { userId, projectId: id },
+    });
+
+    if (!userIsMember) {
+      throw new HttpException(
+        'No haces parte de este proyecto.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
     const query = this._projectsRepo
       .createQueryBuilder('projects')
       .innerJoinAndSelect('projects.projectCategories', 'pc')
       .innerJoinAndSelect('pc.category', 'cat')
+      .innerJoinAndSelect('projects.members', 'memb')
+      .innerJoinAndSelect('memb.user', 'user')
+      .innerJoinAndSelect('memb.projectRole', 'projectRole')
       .where('projects.id = :id', { id });
 
     const results = await query.getOne();
