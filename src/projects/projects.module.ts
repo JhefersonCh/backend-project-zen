@@ -1,3 +1,4 @@
+import { ProjectRolesRepository } from './../shared/repositories/projecRoles.repository';
 import { ProjectCategoriesRepository } from './../shared/repositories/projectCategories.repository';
 import { ProjectRepository } from './../shared/repositories/project.repository';
 import { CategoryRepository } from './../shared/repositories/category.repository';
@@ -30,6 +31,7 @@ import { MembersRepository } from './../shared/repositories/members.repository';
     ProjectsUseCase,
     ProjectsService,
     MembersRepository,
+    ProjectRolesRepository,
   ],
   exports: [],
 })

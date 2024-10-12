@@ -1,19 +1,29 @@
+import { ProjectRolesRepository } from './../../shared/repositories/projecRoles.repository';
+import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
 import { MembersRepository } from './../../shared/repositories/members.repository';
 import { CategoryRepository } from './../../shared/repositories/category.repository';
 import { Categories } from './../../shared/entities/categories.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MemberToProjectDto } from '../dtos/projects.dto';
+import { Equal, Not } from 'typeorm';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private readonly _categoriyRepo: CategoryRepository,
     private readonly _memberRepo: MembersRepository,
+    private readonly _projectRolesRepo: ProjectRolesRepository,
   ) {}
 
-  async getRelatedData(): Promise<{ categories: Categories[] }> {
+  async getRelatedData(): Promise<{
+    categories: Categories[];
+    roles: ProjectRoles[];
+  }> {
     const categories = await this._categoriyRepo.find();
-    return { categories };
+    const roles = await this._projectRolesRepo.find({
+      where: { roleName: Not(Equal('Líder')) },
+    });
+    return { categories, roles };
   }
 
   async addMemberToProject(
