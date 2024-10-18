@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CrudUserService } from '../services/crudUser.service';
-import { RegisterDto, UpdateUserDto } from '../dtos/crudUser.dto';
+import {
+  PaginatedListUsersParamsDto,
+  RegisterDto,
+  UpdateUserDto,
+} from '../dtos/crudUser.dto';
 import { UserFiltersModel } from '../models/user.model';
 
 @Injectable()
@@ -23,5 +27,9 @@ export class CrudUserUseCase {
       where: { id: userId },
     });
     return user && (await this.userService.update(userId, params));
+  }
+
+  async paginatedList(params: PaginatedListUsersParamsDto) {
+    return await this.userService.paginatedList(params);
   }
 }

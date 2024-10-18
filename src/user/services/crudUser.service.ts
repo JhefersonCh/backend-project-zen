@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
 import {
   HttpException,
   HttpStatus,
@@ -11,10 +14,15 @@ import {
 import { DUPLICATED_RESPONSE } from 'src/shared/constants/response.constant';
 import { UserRepository } from 'src/shared/repositories/user.repository';
 import { PasswordService } from './password.service';
-import { RegisterDto, UpdateUserDto } from '../dtos/crudUser.dto';
+import {
+  PaginatedListUsersParamsDto,
+  RegisterDto,
+  UpdateUserDto,
+} from '../dtos/crudUser.dto';
 import { UserFiltersModel } from '../models/user.model';
 import { Users } from 'src/shared/entities/users.entity';
 import { INVALID_ACCESS_DATA_MESSAGE } from 'src/auth/constants/messages.constants';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class CrudUserService {
@@ -80,5 +88,39 @@ export class CrudUserService {
 
   async update(userId: string, params: UpdateUserDto): Promise<void> {
     this.userRepository.update({ id: userId }, params);
+  }
+
+  async paginatedList(params: PaginatedListUsersParamsDto) {
+    const skip = (params.page - 1) * params.perPage;
+    const where = {};
+
+    params.email && Object.assign(where, { email: params.email });
+    params.fullName && Object.assign(where, { fullName: params.fullName });
+    params.username && Object.assign(where, { username: params.username });
+    params.roleId && Object.assign(where, { roleId: params.roleId });
+    params.identification &&
+      Object.assign(where, { identification: params.identification });
+    params.phone && Object.assign(where, { phone: params.phone });
+
+    const searchConditions = [];
+    if (params.search) {
+      searchConditions.push(
+        { fullName: Like(`%${params.search}%`) },
+        { username: Like(`%${params.search}%`) },
+        { identification: Like(`%${params.search}%`) },
+        { email: Like(`%${params.search}%`) },
+      );
+    }
+
+    const [entities, itemCount] = await this.userRepository.findAndCount({
+      where: searchConditions.length ? [where, ...searchConditions] : where,
+      skip,
+      take: params.perPage,
+      order: { createdAt: params.order },
+    });
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
+
+    return new ResponsePaginationDto(entities, pageMetaDto);
   }
 }

@@ -1,3 +1,4 @@
+import { UserRepository } from './../../shared/repositories/user.repository';
 import { ProjectRolesRepository } from './../../shared/repositories/projecRoles.repository';
 import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
 import { MembersRepository } from './../../shared/repositories/members.repository';
@@ -13,6 +14,7 @@ export class ProjectsService {
     private readonly _categoriyRepo: CategoryRepository,
     private readonly _memberRepo: MembersRepository,
     private readonly _projectRolesRepo: ProjectRolesRepository,
+    private readonly _userRepo: UserRepository,
   ) {}
 
   async getRelatedData(): Promise<{
@@ -29,16 +31,36 @@ export class ProjectsService {
   async addMemberToProject(
     body: MemberToProjectDto,
     userId: string,
-  ): Promise<{ rowId: string }> {
-    console.log(userId);
-
+  ): Promise<string> {
     const userLeader = await this._memberRepo.findOne({
       where: { userId, projectId: body.projectId },
     });
 
+    const userIsMember = await this._memberRepo.findOne({
+      where: { userId: body.userId, projectId: body.projectId },
+    });
+
+    if (userIsMember) {
+      throw new HttpException(
+        'El usuario ya es miembro del proyecto.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (userLeader?.projectRole?.roleName !== 'Líder') {
       throw new HttpException(
         'No está autorizado para añadir nuevos miembros.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const userExists = await this._userRepo.findOne({
+      where: { id: body.userId },
+    });
+
+    if (!userExists) {
+      throw new HttpException(
+        'El usuario que intenta añadir no existe.',
         HttpStatus.BAD_REQUEST,
       );
     }

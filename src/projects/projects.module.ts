@@ -1,3 +1,4 @@
+import { UserRepository } from './../shared/repositories/user.repository';
 import { ProjectRolesRepository } from './../shared/repositories/projecRoles.repository';
 import { ProjectCategoriesRepository } from './../shared/repositories/projectCategories.repository';
 import { ProjectRepository } from './../shared/repositories/project.repository';
@@ -13,13 +14,16 @@ import { CrudProjectsService } from './services/crudProjects.service';
 import { ProjectsUseCase } from './useCases/projects.UC';
 import { ProjectsService } from './services/projects.service';
 import { MembersRepository } from './../shared/repositories/members.repository';
+import { MembersController } from './controllers/members.controller';
+import { MembersUseCase } from './useCases/members.UC';
+import { MembersService } from './services/members.service';
 
 @Module({
   imports: [
     // SharedModule.forRoot(),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [ProjectsController],
+  controllers: [ProjectsController, MembersController],
   providers: [
     CrudProjectsUseCase,
     CrudCategoriesUseCase,
@@ -32,6 +36,9 @@ import { MembersRepository } from './../shared/repositories/members.repository';
     ProjectsService,
     MembersRepository,
     ProjectRolesRepository,
+    MembersUseCase,
+    MembersService,
+    UserRepository,
   ],
   exports: [],
 })

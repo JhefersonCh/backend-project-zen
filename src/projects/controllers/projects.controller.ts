@@ -37,10 +37,8 @@ import {
 } from '@nestjs/swagger';
 import {
   CreateProjectDto,
-  DeleteMemberFromProjectDto,
   GetOneProjectResponseDto,
   GetProjectsResponseDto,
-  MemberToProjectDto,
   ProjectsRelatedDataReponseDto,
   UpdateProjectDto,
 } from '../dtos/projects.dto';
@@ -188,42 +186,6 @@ export class ProjectsController {
     return {
       statusCode: HttpStatus.CREATED,
       message: UPDATED_MESSAGE,
-    };
-  }
-
-  @Post('/add-member')
-  @ApiCreatedResponse(UPDATED_RESPONSE)
-  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  async addMembersToProject(
-    @Body() body: MemberToProjectDto,
-    @Req() req,
-  ): Promise<CreatedRecordResponseDto> {
-    const rowId = await this._projectsUC.addMemberFromProject(
-      body,
-      req.user.id,
-    );
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: 'Member added successfully',
-      data: rowId,
-    };
-  }
-
-  @Delete('/remove-member')
-  @ApiOkResponse(DELETED_RESPONSE)
-  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  async removeMemberFromProject(
-    @Body() body: DeleteMemberFromProjectDto,
-    @Req() req,
-  ): Promise<DeleteReCordResponseDto> {
-    await this._projectsUC.removeMemberFromProject(body, req.user.id);
-    return {
-      statusCode: HttpStatus.OK,
-      message: DELETED_MESSAGE,
     };
   }
 

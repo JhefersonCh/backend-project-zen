@@ -1,3 +1,4 @@
+import { ParamsPaginationDto } from './../../shared/dtos/pagination.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Users } from 'src/shared/entities/users.entity';
 import {
@@ -188,16 +189,6 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   avatarUrl?: string;
-
-  // @ApiProperty({
-  //   type: String,
-  //   required: false,
-  //   example: 'john.doe@example.com',
-  // })
-  // @IsString()
-  // @IsEmail()
-  // @IsOptional()
-  // email?: string;
 }
 
 export class GetUserResponseDto implements BaseResponseDto {
@@ -211,4 +202,55 @@ export class GetUserResponseDto implements BaseResponseDto {
     example: USER_DATA_RESPONSE_EXAMPLE,
   })
   data: UserDataResponse;
+}
+
+export class PaginatedListUsersParamsDto extends ParamsPaginationDto {
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'John Doe',
+  })
+  @IsString()
+  @IsOptional()
+  fullName?: string;
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: '@john.doe',
+  })
+  @IsString()
+  @IsOptional()
+  username?: string;
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'john.doe@gmail.com',
+  })
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @IsString()
+  @IsOptional()
+  roleId?: number;
+  @ApiProperty({
+    type: Number,
+    required: false,
+    example: '123456789',
+  })
+  @IsNumber()
+  @IsOptional()
+  identification?: string;
+  @ApiProperty({
+    type: Number,
+    required: false,
+    example: '3203203203',
+  })
+  @IsString()
+  @IsOptional()
+  phone?: string;
 }
