@@ -39,7 +39,8 @@ export class MembersService {
         'member.updatedAt',
         'member.deletedAt',
       ])
-      .innerJoinAndSelect('member.projectRole', 'projectRole');
+      .innerJoinAndSelect('member.projectRole', 'projectRole')
+      .innerJoinAndSelect('member.user', 'user');
 
     queryBuilder.distinctOn(['member.userId']);
     queryBuilder
