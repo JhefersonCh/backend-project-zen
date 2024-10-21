@@ -1,20 +1,30 @@
-import { DELETED_MESSAGE } from './../../shared/constants/messages.constant';
+import {
+  DELETED_MESSAGE,
+  UPDATED_MESSAGE,
+} from './../../shared/constants/messages.constant';
 import {
   CreatedRecordResponseDto,
   DeleteReCordResponseDto,
+  UpdateRecordResponseDto,
 } from './../../shared/dtos/response.dto';
 import {
   CREATED_RESPONSE,
   DELETED_RESPONSE,
   NOT_FOUND_RESPONSE,
+  UPDATED_RESPONSE,
 } from './../../shared/constants/response.constant';
-import { MembersRelatedDataResponse } from './../dtos/members.dto';
+import {
+  MembersByProjectResponseDto,
+  MembersRelatedDataResponse,
+} from './../dtos/members.dto';
 import {
   Body,
   Controller,
   Delete,
   Get,
   HttpStatus,
+  Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -31,6 +41,7 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   DeleteMemberFromProjectDto,
   MemberToProjectDto,
+  UpdateMemberToProjectDto,
 } from '../dtos/projects.dto';
 import { ProjectsUseCase } from '../useCases/projects.UC';
 
@@ -87,6 +98,35 @@ export class MembersController {
     return {
       statusCode: HttpStatus.OK,
       message: DELETED_MESSAGE,
+    };
+  }
+
+  @Get('/by-project/:projectId')
+  @ApiOkResponse({ type: MembersByProjectResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getMembersByProject(
+    @Param('projectId') projectId: number,
+  ): Promise<MembersByProjectResponseDto> {
+    const data = await this._membersUseCase.getAllMembersByProjectId(projectId);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
+  }
+
+  @Patch('/update-member')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async updateMember(
+    @Body() body: UpdateMemberToProjectDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this._membersUseCase.update(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: UPDATED_MESSAGE,
     };
   }
 }

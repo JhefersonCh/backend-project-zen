@@ -177,6 +177,13 @@ export class MemberToProjectDto {
   projectRoleId: number;
 }
 
+export class UpdateMemberToProjectDto extends MemberToProjectDto {
+  @ApiProperty({ type: Number, example: 1, required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+}
+
 export class DeleteMemberFromProjectDto {
   @ApiProperty({ type: Number, example: 1, required: true })
   @IsNumber()

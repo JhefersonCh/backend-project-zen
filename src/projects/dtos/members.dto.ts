@@ -1,3 +1,4 @@
+import { Members } from './../../shared/entities/members.entity';
 import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
@@ -41,4 +42,13 @@ export class MembersRelatedDataResponse {
     },
   })
   data: { projectRoles: ProjectRoles[] };
+}
+export class MembersByProjectResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+  @ApiProperty({ type: Object, example: 'ola' })
+  data: Members[];
 }
