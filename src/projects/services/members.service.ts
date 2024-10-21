@@ -29,15 +29,17 @@ export class MembersService {
       });
     }
 
-    queryBuilder.select([
-      'member.id',
-      'member.userId',
-      'member.projectId',
-      'member.projectRoleId',
-      'member.createdAt',
-      'member.updatedAt',
-      'member.deletedAt',
-    ]);
+    queryBuilder
+      .select([
+        'member.id',
+        'member.userId',
+        'member.projectId',
+        'member.projectRoleId',
+        'member.createdAt',
+        'member.updatedAt',
+        'member.deletedAt',
+      ])
+      .innerJoinAndSelect('member.projectRole', 'projectRole');
 
     queryBuilder.distinctOn(['member.userId']);
     queryBuilder
