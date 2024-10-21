@@ -15,7 +15,7 @@ export class ProjectsUseCase {
   }
 
   async removeMemberFromProject(
-    body: Partial<MemberToProjectDto>,
+    body: { id: number; projectId: number },
     userId: string,
   ) {
     return await this._projectsService.removeMemberFromProject(body, userId);

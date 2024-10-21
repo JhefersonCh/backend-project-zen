@@ -39,7 +39,6 @@ import {
 import { MembersUseCase } from '../useCases/members.UC';
 import { AuthGuard } from '@nestjs/passport';
 import {
-  DeleteMemberFromProjectDto,
   MemberToProjectDto,
   UpdateMemberToProjectDto,
 } from '../dtos/projects.dto';
@@ -85,16 +84,20 @@ export class MembersController {
     };
   }
 
-  @Delete('/remove-member')
+  @Delete('/remove-member/:id/:projectId')
   @ApiOkResponse(DELETED_RESPONSE)
   @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   async removeMemberFromProject(
-    @Body() body: DeleteMemberFromProjectDto,
     @Req() req,
+    @Param('id') id: number,
+    @Param('projectId') projectId: number,
   ): Promise<DeleteReCordResponseDto> {
-    await this._projectsUC.removeMemberFromProject(body, req.user.id);
+    await this._projectsUC.removeMemberFromProject(
+      { id: id, projectId: projectId },
+      req.user.id,
+    );
     return {
       statusCode: HttpStatus.OK,
       message: DELETED_MESSAGE,
