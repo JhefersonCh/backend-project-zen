@@ -74,7 +74,7 @@ export class TasksController {
     };
   }
 
-  @Post('')
+  @Post('/create')
   @ApiCreatedResponse({ type: CreatedRecordResponseDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
@@ -89,7 +89,7 @@ export class TasksController {
     };
   }
 
-  @Patch('')
+  @Patch('/update')
   @ApiOkResponse({ type: UpdateRecordResponseDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
