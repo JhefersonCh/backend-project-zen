@@ -101,6 +101,6 @@ export class Tasks {
   @Column({ type: 'timestamp', nullable: false })
   deadline: Date;
 
-  @OneToMany(() => TaskTags, (tastTag) => tastTag.tag)
+  @OneToMany(() => TaskTags, (tastTag) => tastTag.task)
   taskTags: TaskTags[];
 }

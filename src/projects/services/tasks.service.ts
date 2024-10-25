@@ -163,13 +163,23 @@ export class TasksService {
     return task;
   }
   async findManyByParams(params: TasksFiltersModel): Promise<Tasks[]> {
-    const task = await this.tasksRepo.find({
-      where: { ...params.where },
-    });
-    if (!task) {
+    const queryBuilder = this.tasksRepo.createQueryBuilder('task');
+    queryBuilder
+      .leftJoinAndSelect('task.taskTags', 'taskTag')
+      .leftJoinAndSelect('taskTag.tag', 'tag');
+
+    if (params.where) {
+      Object.entries(params.where).forEach(([key, value]) => {
+        queryBuilder.andWhere(`task.${key} = :${key}`, { [key]: value });
+      });
+    }
+
+    const tasks = await queryBuilder.getMany();
+    if (!tasks.length) {
       throw new HttpException(NOT_FOUND_RESPONSE, HttpStatus.NOT_FOUND);
     }
-    return task;
+
+    return tasks;
   }
 
   async deleteByParams(params: TasksWhereModel): Promise<void> {
