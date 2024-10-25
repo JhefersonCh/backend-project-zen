@@ -25,7 +25,6 @@ import { Priorities } from './entities/priorities.entity';
 import { Members } from './entities/members.entity';
 import { Comments } from './entities/comments.entity';
 import { Categories } from './entities/categories.entity';
-import { Assignments } from './entities/assignments.entity';
 
 @Module({})
 export class SharedModule {
@@ -62,7 +61,6 @@ export class SharedModule {
           Members,
           Comments,
           Categories,
-          Assignments,
         ]),
         PassportModule,
         JwtModule.registerAsync({

@@ -12,7 +12,7 @@ import { Projects } from './projects.entity';
 import { Status } from './status.entity';
 import { Priorities } from './priorities.entity';
 import { TaskTags } from './taskTags.entity';
-import { Assignments } from './assignments.entity';
+import { Members } from './members.entity';
 
 @Entity({ name: 'Tasks' })
 export class Tasks {
@@ -69,6 +69,18 @@ export class Tasks {
   })
   statusId: number;
 
+  @ManyToOne(() => Members, (member) => member.id, {
+    nullable: false,
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  member: Members;
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  memberId: number;
+
   @CreateDateColumn({
     type: 'timestamp',
   })
@@ -86,9 +98,9 @@ export class Tasks {
   })
   deletedAt?: Date;
 
+  @Column({ type: 'timestamp', nullable: false })
+  deadline: Date;
+
   @OneToMany(() => TaskTags, (tastTag) => tastTag.tag)
   taskTags: TaskTags[];
-
-  @OneToMany(() => Assignments, (assignment) => assignment.task)
-  assignments: Assignments[];
 }

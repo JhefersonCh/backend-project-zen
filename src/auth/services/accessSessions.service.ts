@@ -30,6 +30,6 @@ export class AccessSessionsService {
     if (!sessionExists) {
       throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
     }
-    await this.accessSessionsRepository.softDelete(id);
+    await this.accessSessionsRepository.delete(id);
   }
 }

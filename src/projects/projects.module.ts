@@ -1,3 +1,8 @@
+import { TagRepository } from './../shared/repositories/tag.repository';
+import { TaskTagsRepository } from './../shared/repositories/taskTags.repository';
+import { TaskRepository } from './../shared/repositories/task.repository';
+import { StatusRepository } from './../shared/repositories/status.repository';
+import { PriorityRepository } from './../shared/repositories/priority.repository';
 import { UserRepository } from './../shared/repositories/user.repository';
 import { ProjectRolesRepository } from './../shared/repositories/projecRoles.repository';
 import { ProjectCategoriesRepository } from './../shared/repositories/projectCategories.repository';
@@ -17,13 +22,16 @@ import { MembersRepository } from './../shared/repositories/members.repository';
 import { MembersController } from './controllers/members.controller';
 import { MembersUseCase } from './useCases/members.UC';
 import { MembersService } from './services/members.service';
+import { TasksController } from './controllers/tasks.controller';
+import { TasksUseCase } from './useCases/tasks.UC';
+import { TasksService } from './services/tasks.service';
 
 @Module({
   imports: [
     // SharedModule.forRoot(),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [ProjectsController, MembersController],
+  controllers: [ProjectsController, MembersController, TasksController],
   providers: [
     CrudProjectsUseCase,
     CrudCategoriesUseCase,
@@ -39,6 +47,13 @@ import { MembersService } from './services/members.service';
     MembersUseCase,
     MembersService,
     UserRepository,
+    TasksUseCase,
+    TasksService,
+    PriorityRepository,
+    StatusRepository,
+    TaskRepository,
+    TaskTagsRepository,
+    TagRepository,
   ],
   exports: [],
 })

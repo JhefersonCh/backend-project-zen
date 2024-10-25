@@ -90,6 +90,6 @@ export class ProjectsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this._memberRepo.softDelete(body);
+    await this._memberRepo.delete(body);
   }
 }

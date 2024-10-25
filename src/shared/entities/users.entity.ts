@@ -12,7 +12,6 @@ import {
 import { Exclude } from 'class-transformer';
 import { IdentificationTypes } from './identificationTypes.entity';
 import { Roles } from './roles.entity';
-import { Assignments } from './assignments.entity';
 import { Members } from './members.entity';
 @Entity({ name: 'Users' })
 export class Users {
@@ -97,9 +96,6 @@ export class Users {
     nullable: true,
   })
   deletedAt?: Date;
-
-  @OneToMany(() => Assignments, (assignment) => assignment.user)
-  assignments: Assignments[];
 
   @OneToMany(() => Members, (member) => member.user)
   Members: Members[];

@@ -53,4 +53,8 @@ export class MembersService {
   async update(body: UpdateMemberToProjectDto): Promise<void> {
     await this._membersRepo.update(body.id, body);
   }
+
+  async findOneById(id: number): Promise<Members> {
+    return await this._membersRepo.findOne({ where: { id } });
+  }
 }

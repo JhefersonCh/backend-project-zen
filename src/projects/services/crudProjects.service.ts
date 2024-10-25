@@ -11,6 +11,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { TasksService } from './tasks.service';
 
 @Injectable()
 export class CrudProjectsService {
@@ -18,6 +19,7 @@ export class CrudProjectsService {
     private readonly _projectsRepo: ProjectRepository,
     private readonly _projectCategoriesRepo: ProjectCategoriesRepository,
     private readonly _membersRepo: MembersRepository,
+    private readonly _tasksService: TasksService,
   ) {}
 
   async create(
@@ -157,7 +159,8 @@ export class CrudProjectsService {
       );
     }
     await this._projectsRepo.softDelete(id);
-    await this._projectCategoriesRepo.softDelete({ projectId: id });
-    await this._membersRepo.softDelete({ projectId: id });
+    await this._projectCategoriesRepo.delete({ projectId: id });
+    await this._membersRepo.delete({ projectId: id });
+    await this._tasksService.deleteByParams({ projectId: id });
   }
 }
