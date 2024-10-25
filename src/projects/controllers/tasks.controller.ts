@@ -55,8 +55,6 @@ export class TasksController {
   async getTaskByMemberId(
     @Param('memberId') memberId: number,
   ): Promise<GetManyTasksResponse> {
-    console.log('ola');
-
     const data = await this.tasksUseCase.findByMemberId(memberId);
     return {
       statusCode: HttpStatus.OK,
