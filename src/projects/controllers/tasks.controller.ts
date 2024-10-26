@@ -3,6 +3,7 @@ import { TasksUseCase } from './../useCases/tasks.UC';
 import {
   CreatedRecordResponseDto,
   DeleteReCordResponseDto,
+  UpdateManyRecordsResponseDto,
   UpdateRecordResponseDto,
 } from './../../shared/dtos/response.dto';
 import {
@@ -28,6 +29,7 @@ import {
   GetManyTasksResponse,
   GetTaskByIdResponse,
   TasksRelatedDataResponse,
+  UpdateManyStatusesDto,
   UpdateTaskDto,
 } from '../dtos/tasks.dto';
 
@@ -117,6 +119,20 @@ export class TasksController {
     @Param('projectId') projectId: number,
   ): Promise<GetManyTasksResponse> {
     const data = await this.tasksUseCase.findByProjectId(projectId);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
+  }
+
+  @Post('/update-statuses')
+  @ApiOkResponse({ type: UpdateManyRecordsResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async updateStatuses(
+    @Body() body: UpdateManyStatusesDto,
+  ): Promise<UpdateManyRecordsResponseDto> {
+    const data = await this.tasksUseCase.updateMany(body);
     return {
       statusCode: HttpStatus.OK,
       data,

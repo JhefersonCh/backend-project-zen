@@ -332,3 +332,22 @@ export class GetManyTasksResponse {
   })
   data: Tasks[];
 }
+
+export interface UpdateManyStatusesBodyDto {
+  statusId: number;
+  id: number;
+}
+
+export class UpdateManyStatusesDto {
+  @ApiProperty({
+    type: Array,
+    example: [
+      { statusId: 1, id: 1 },
+      { statusId: 2, id: 2 },
+    ],
+    required: true,
+  })
+  @IsArray()
+  @IsNotEmpty()
+  tasks: UpdateManyStatusesBodyDto[];
+}

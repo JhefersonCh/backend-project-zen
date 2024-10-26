@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { TasksService } from '../services/tasks.service';
-import { CreateTaskDto, UpdateTaskDto } from '../dtos/tasks.dto';
+import {
+  CreateTaskDto,
+  UpdateManyStatusesDto,
+  UpdateTaskDto,
+} from '../dtos/tasks.dto';
 
 @Injectable()
 export class TasksUseCase {
@@ -15,6 +19,10 @@ export class TasksUseCase {
 
   async update(body: UpdateTaskDto) {
     await this.tasksService.update(body);
+  }
+
+  async updateMany(body: UpdateManyStatusesDto) {
+    return await this.tasksService.updateStatuses(body?.tasks);
   }
 
   async findById(id: number) {

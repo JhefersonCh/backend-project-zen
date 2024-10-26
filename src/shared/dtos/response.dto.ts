@@ -10,6 +10,8 @@ import {
   UNAUTHORIZED_MESSAGE,
   UPDATED_MESSAGE,
 } from '../constants/messages.constant';
+import { UpdateManyResults } from '../interfaces/results.interface';
+import { UPDATE_MANY_RESPONSE_EXAMPLE } from '../constants/examples.constants';
 
 export interface BaseResponseDto {
   title?: string;
@@ -187,4 +189,17 @@ export class InsertBulkStatsDto extends RecordsBulkStatsDto {
     example: 3,
   })
   inserted: number;
+}
+
+export class UpdateManyRecordsResponseDto implements BaseResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+  @ApiProperty({
+    type: Object,
+    example: UPDATE_MANY_RESPONSE_EXAMPLE,
+  })
+  data: UpdateManyResults;
 }

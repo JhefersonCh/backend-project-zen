@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { UpdateManyResults } from './../../shared/interfaces/results.interface';
 import { ProjectRepository } from './../../shared/repositories/project.repository';
 import { NOT_FOUND_RESPONSE } from './../../shared/constants/response.constant';
 import { TaskTags } from './../../shared/entities/taskTags.entity';
@@ -17,7 +19,11 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { CreateTaskDto, UpdateTaskDto } from '../dtos/tasks.dto';
+import {
+  CreateTaskDto,
+  UpdateManyStatusesBodyDto,
+  UpdateTaskDto,
+} from '../dtos/tasks.dto';
 import { Connection } from 'typeorm';
 import { MembersService } from './members.service';
 import { TasksFiltersModel, TasksWhereModel } from '../models/params.model';
@@ -136,6 +142,36 @@ export class TasksService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async updateStatuses(
+    tasks: UpdateManyStatusesBodyDto[],
+  ): Promise<UpdateManyResults> {
+    const result: UpdateManyResults = {
+      failed: 0,
+      success: 0,
+    };
+
+    await Promise.all(
+      tasks.map(async (task) => {
+        try {
+          const existingTask = await this.tasksRepo.findOne({
+            where: { id: task.id },
+          });
+
+          if (!existingTask) {
+            throw new HttpException(NOT_FOUND_RESPONSE, HttpStatus.NOT_FOUND);
+          }
+
+          await this.tasksRepo.update(task.id, { statusId: task.statusId });
+          result.success++;
+        } catch (_) {
+          result.failed++;
+        }
+      }),
+    );
+
+    return result;
   }
 
   private async validateProjectAndMember(projectId: number, memberId: number) {
