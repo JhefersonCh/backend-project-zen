@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TasksService } from '../services/tasks.service';
 import {
   CreateTaskDto,
+  GetAllByProjectIdAndMemberIdBodyDto,
   UpdateManyStatusesDto,
   UpdateTaskDto,
 } from '../dtos/tasks.dto';
@@ -35,9 +36,12 @@ export class TasksUseCase {
     });
   }
 
-  async findByMemberId(memberId: number) {
+  async findByMemberId(params: GetAllByProjectIdAndMemberIdBodyDto) {
     return await this.tasksService.findManyByParams({
-      where: { memberId },
+      where: {
+        memberId: Number(params.memberId),
+        projectId: Number(params.projectId),
+      },
     });
   }
 

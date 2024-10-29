@@ -202,7 +202,8 @@ export class TasksService {
     const queryBuilder = this.tasksRepo.createQueryBuilder('task');
     queryBuilder
       .leftJoinAndSelect('task.taskTags', 'taskTag')
-      .leftJoinAndSelect('taskTag.tag', 'tag');
+      .leftJoinAndSelect('taskTag.tag', 'tag')
+      .leftJoinAndSelect('task.priority', 'priority');
 
     if (params.where) {
       Object.entries(params.where).forEach(([key, value]) => {
@@ -211,10 +212,6 @@ export class TasksService {
     }
 
     const tasks = await queryBuilder.getMany();
-    if (!tasks.length) {
-      throw new HttpException(NOT_FOUND_RESPONSE, HttpStatus.NOT_FOUND);
-    }
-
     return tasks;
   }
 

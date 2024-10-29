@@ -15,6 +15,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import {
   CreateTaskDto,
+  GetAllByProjectIdAndMemberIdBodyDto,
   GetManyTasksResponse,
   GetTaskByIdResponse,
   TasksRelatedDataResponse,
@@ -50,14 +52,14 @@ export class TasksController {
     };
   }
 
-  @Get('/find-by-member/:memberId')
+  @Get('/find-by-member')
   @ApiOkResponse({ type: GetManyTasksResponse })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   async getTaskByMemberId(
-    @Param('memberId') memberId: number,
+    @Query() body: GetAllByProjectIdAndMemberIdBodyDto,
   ): Promise<GetManyTasksResponse> {
-    const data = await this.tasksUseCase.findByMemberId(memberId);
+    const data = await this.tasksUseCase.findByMemberId(body);
     return {
       statusCode: HttpStatus.OK,
       data,

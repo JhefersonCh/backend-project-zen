@@ -333,6 +333,25 @@ export class GetManyTasksResponse {
   data: Tasks[];
 }
 
+export class GetAllByProjectIdAndMemberIdBodyDto {
+  @ApiProperty({
+    type: String,
+    example: 1,
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  projectId: string;
+  @ApiProperty({
+    type: String,
+    example: 1,
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  memberId: string;
+}
+
 export interface UpdateManyStatusesBodyDto {
   statusId: number;
   id: number;
