@@ -97,8 +97,14 @@ export class TasksController {
   @ApiOkResponse({ type: UpdateRecordResponseDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  async updateTask(@Body() body: UpdateTaskDto): Promise<void> {
+  async updateTask(
+    @Body() body: UpdateTaskDto,
+  ): Promise<UpdateRecordResponseDto> {
     await this.tasksUseCase.update(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Tarea actualizada correctamente',
+    };
   }
 
   @Get('/:id')
