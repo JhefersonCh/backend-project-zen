@@ -216,17 +216,13 @@ export class TasksService {
   }
 
   async deleteByParams(params: TasksWhereModel): Promise<void> {
-    if (!params.id) {
-      throw new HttpException(
-        'El ID de la tarea es obligatorio.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const taskExist = await this.tasksRepo.findOne({
-      where: { id: params?.id },
-    });
-    if (!taskExist) {
-      throw new HttpException(NOT_FOUND_RESPONSE, HttpStatus.NOT_FOUND);
+    if (params.id) {
+      const taskExist = await this.tasksRepo.findOne({
+        where: { id: params?.id },
+      });
+      if (!taskExist) {
+        throw new HttpException(NOT_FOUND_RESPONSE, HttpStatus.NOT_FOUND);
+      }
     }
 
     const queryRunner = this.connection.createQueryRunner();
