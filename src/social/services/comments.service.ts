@@ -60,6 +60,7 @@ export class CommentsService {
         'comment.rowTable',
         'user.fullName',
         'user.id',
+        'user.avatarUrl',
       ])
       .getMany();
 
