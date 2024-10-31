@@ -1,8 +1,8 @@
+import { Comments } from './../../shared/entities/comments.entity';
 import { HttpStatus } from '@nestjs/common';
 import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Comments } from 'src/shared/entities/comments.entity';
 
 export class CommentBodyDto {
   @ApiProperty({ type: String, example: 'This is a comment', required: true })
