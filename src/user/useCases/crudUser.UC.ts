@@ -32,4 +32,8 @@ export class CrudUserUseCase {
   async paginatedList(params: PaginatedListUsersParamsDto) {
     return await this.userService.paginatedList(params);
   }
+
+  async getRelatedDataToCreate(isRegister: boolean) {
+    return await this.userService.getRelatedDataToCreate(isRegister);
+  }
 }

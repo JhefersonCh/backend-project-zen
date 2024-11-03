@@ -4,7 +4,7 @@ import { TaskRepository } from './../shared/repositories/task.repository';
 import { StatusRepository } from './../shared/repositories/status.repository';
 import { PriorityRepository } from './../shared/repositories/priority.repository';
 import { UserRepository } from './../shared/repositories/user.repository';
-import { ProjectRolesRepository } from './../shared/repositories/projecRoles.repository';
+import { ProjectRolesRepository } from '../shared/repositories/projectRol.repository';
 import { ProjectCategoriesRepository } from './../shared/repositories/projectCategories.repository';
 import { ProjectRepository } from './../shared/repositories/project.repository';
 import { CategoryRepository } from './../shared/repositories/category.repository';

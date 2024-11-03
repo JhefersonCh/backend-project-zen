@@ -1,3 +1,5 @@
+import { IdentificationTypes } from './../../shared/entities/identificationTypes.entity';
+import { Roles } from './../../shared/entities/roles.entity';
 import { ParamsPaginationDto } from './../../shared/dtos/pagination.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Users } from 'src/shared/entities/users.entity';
@@ -253,4 +255,22 @@ export class PaginatedListUsersParamsDto extends ParamsPaginationDto {
   @IsString()
   @IsOptional()
   phone?: string;
+}
+
+export interface CreateUserRelatedDataDto {
+  roles?: Roles[];
+  identificationTypes: IdentificationTypes[];
+}
+
+export class CreateUserRelatedDataReponseDto implements BaseResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+  @ApiProperty({
+    type: Object,
+    example: '',
+  })
+  data: CreateUserRelatedDataDto;
 }

@@ -1,3 +1,6 @@
+import { RepositoriesService } from './../../shared/service/repositories.service';
+import { Roles } from './../../shared/entities/roles.entity';
+
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
@@ -15,6 +18,7 @@ import { DUPLICATED_RESPONSE } from 'src/shared/constants/response.constant';
 import { UserRepository } from 'src/shared/repositories/user.repository';
 import { PasswordService } from './password.service';
 import {
+  CreateUserRelatedDataDto,
   PaginatedListUsersParamsDto,
   RegisterDto,
   UpdateUserDto,
@@ -23,13 +27,31 @@ import { UserFiltersModel } from '../models/user.model';
 import { Users } from 'src/shared/entities/users.entity';
 import { INVALID_ACCESS_DATA_MESSAGE } from 'src/auth/constants/messages.constants';
 import { Like } from 'typeorm';
+import { IdentificationTypes } from 'src/shared/entities/identificationTypes.entity';
 
 @Injectable()
 export class CrudUserService {
   constructor(
     private userRepository: UserRepository,
     private readonly passwrodService: PasswordService,
+    private readonly repositoriesService: RepositoriesService,
   ) {}
+
+  async getRelatedDataToCreate(
+    isRegister: boolean,
+  ): Promise<CreateUserRelatedDataDto> {
+    const identificationTypes =
+      await this.repositoriesService.getEntities<IdentificationTypes>(
+        this.repositoriesService.repositories.identificationType,
+      );
+    if (!isRegister) {
+      const roles = await this.repositoriesService.getEntities<Roles>(
+        this.repositoriesService.repositories.roles,
+      );
+      return { identificationTypes, roles };
+    }
+    return { identificationTypes };
+  }
 
   async create(user: RegisterDto, roleId: number): Promise<{ rowId: string }> {
     const userExists = await this.userRepository.findOne({

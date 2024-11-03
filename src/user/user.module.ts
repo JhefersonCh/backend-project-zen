@@ -1,3 +1,12 @@
+import { RepositoriesService } from './../shared/service/repositories.service';
+import { StatusRepository } from './../shared/repositories/status.repository';
+import { PriorityRepository } from './../shared/repositories/priority.repository';
+import { ProjectRolesRepository } from './../shared/repositories/projectRol.repository';
+import { TagRepository } from './../shared/repositories/tag.repository';
+import { CategoryRepository } from './../shared/repositories/category.repository';
+import { AdminPanelService } from './../shared/service/adminPanel.service';
+import { IdentificationTypesRepository } from './../shared/repositories/identificationType.repository';
+import { RolesRepository } from './../shared/repositories/rol.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { UserController } from './controllers/user.controller';
@@ -22,6 +31,15 @@ import { PassportModule } from '@nestjs/passport';
     CrudUserUseCase,
     PasswordService,
     JwtService,
+    RolesRepository,
+    IdentificationTypesRepository,
+    AdminPanelService,
+    CategoryRepository,
+    TagRepository,
+    ProjectRolesRepository,
+    PriorityRepository,
+    StatusRepository,
+    RepositoriesService,
   ],
 })
 export class UserModule {}

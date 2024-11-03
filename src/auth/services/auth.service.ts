@@ -78,7 +78,6 @@ export class AuthService {
       accessToken,
       id: accessSessionId,
     });
-    console.log(sessionExists);
 
     if (!sessionExists) {
       throw new NotFoundException(NOT_FOUND_RESPONSE);
@@ -118,7 +117,6 @@ export class AuthService {
       userId: paiload.sub,
       refreshToken: body.refreshToken,
     });
-    console.log(user);
 
     if (!user) {
       throw new UnauthorizedException();
@@ -128,6 +126,13 @@ export class AuthService {
       identification: user.identification,
       sub: user.id,
     });
+
+    await this.accessSessionsService.generateSession({
+      userId: user.id,
+      accessToken: tokens.accessToken,
+      id: uuid.v4(),
+    });
+
     return {
       tokens: { ...tokens },
       user: {

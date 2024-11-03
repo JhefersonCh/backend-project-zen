@@ -1,6 +1,6 @@
 import { Members } from './../../shared/entities/members.entity';
 import { MembersRepository } from './../../shared/repositories/members.repository';
-import { ProjectRolesRepository } from './../../shared/repositories/projecRoles.repository';
+import { ProjectRolesRepository } from '../../shared/repositories/projectRol.repository';
 import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
 import { Injectable } from '@nestjs/common';
 import { MemberFiltersModel } from '../models/params.model';

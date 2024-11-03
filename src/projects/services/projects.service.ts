@@ -1,5 +1,5 @@
 import { UserRepository } from './../../shared/repositories/user.repository';
-import { ProjectRolesRepository } from './../../shared/repositories/projecRoles.repository';
+import { ProjectRolesRepository } from '../../shared/repositories/projectRol.repository';
 import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
 import { MembersRepository } from './../../shared/repositories/members.repository';
 import { CategoryRepository } from './../../shared/repositories/category.repository';

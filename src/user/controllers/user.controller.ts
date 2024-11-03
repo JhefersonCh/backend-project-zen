@@ -46,12 +46,36 @@ import {
   UpdateUserDto,
   CreateUserDto,
   PaginatedListUsersParamsDto,
+  CreateUserRelatedDataReponseDto,
 } from '../dtos/crudUser.dto';
 
 @Controller('user')
 @ApiTags('Usuarios')
 export class UserController {
   constructor(private readonly crudUserUseCase: CrudUserUseCase) {}
+
+  @Get('/register/related-data')
+  @ApiOkResponse({ type: CreateUserRelatedDataReponseDto })
+  async getRelatedData(): Promise<CreateUserRelatedDataReponseDto> {
+    const data = await this.crudUserUseCase.getRelatedDataToCreate(true);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
+  }
+
+  @Get('/create/related-data')
+  @ApiOkResponse({ type: CreateUserRelatedDataReponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getRelatedDataForCreate(): Promise<CreateUserRelatedDataReponseDto> {
+    const data = await this.crudUserUseCase.getRelatedDataToCreate(false);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
+  }
+
   @Post('/register')
   @ApiCreatedResponse(CREATED_RESPONSE)
   @ApiConflictResponse(DUPLICATED_RESPONSE)
