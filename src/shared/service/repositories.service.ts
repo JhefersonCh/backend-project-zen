@@ -72,7 +72,7 @@ export class RepositoriesService {
   }
 
   /**
-   * Método generico para actualizar una entidad del repositorio enviado
+   * Método genérico para actualizar una entidad del repositorio enviado.
    * @param repository
    * @param id
    * @param body
@@ -103,7 +103,7 @@ export class RepositoriesService {
   }
 
   /**
-   * Método para obtener un elemento por id de forma generica en el repositorio enviado.
+   * Método para obtener un elemento por id de forma genérica en el repositorio enviado.
    * @param repository
    * @param id
    * @returns

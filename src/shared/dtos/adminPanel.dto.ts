@@ -14,6 +14,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { Priorities } from '../entities/priorities.entity';
 
 export interface GetAdminPanelDto {
   identificationTypes: IdentificationTypes[];
@@ -21,6 +22,7 @@ export interface GetAdminPanelDto {
   tags: Tags[];
   projectRoles: ProjectRoles[];
   stauses: Status[];
+  priorities: Priorities[];
 }
 
 export class GetAdminPanelReponseDto implements BaseResponseDto {

@@ -6,6 +6,12 @@ import {
   BaseAdminPanelElementDto,
   UpdateAdminPanelElementDto,
 } from '../dtos/adminPanel.dto';
+import { IdentificationTypes } from '../entities/identificationTypes.entity';
+import { Categories } from '../entities/categories.entity';
+import { Tags } from '../entities/tags.entity';
+import { ProjectRoles } from '../entities/projectRoles.entity';
+import { Status } from '../entities/status.entity';
+import { Priorities } from '../entities/priorities.entity';
 
 @Injectable()
 export class AdminPanelService {
@@ -32,17 +38,31 @@ export class AdminPanelService {
     }
   }
 
-  async getAdminPanelInfo(userId: string) {
+  async getAdminPanelInfo(userId: string): Promise<{
+    identificationTypes: IdentificationTypes[];
+    categories: Categories[];
+    tags: Tags[];
+    projectRoles: ProjectRoles[];
+    stauses: Status[];
+    priorities: Priorities[];
+  }> {
     await this.validateAdmin(userId);
 
-    const [identificationTypes, categories, tags, projectRoles, stauses] =
-      await Promise.all([
-        this.repositoriesService.repositories.identificationType.find(),
-        this.repositoriesService.repositories.category.find(),
-        this.repositoriesService.repositories.tag.find(),
-        this.repositoriesService.repositories.projectRole.find(),
-        this.repositoriesService.repositories.status.find(),
-      ]);
+    const [
+      identificationTypes,
+      categories,
+      tags,
+      projectRoles,
+      stauses,
+      priorities,
+    ] = await Promise.all([
+      this.repositoriesService.repositories.identificationType.find(),
+      this.repositoriesService.repositories.category.find(),
+      this.repositoriesService.repositories.tag.find(),
+      this.repositoriesService.repositories.projectRole.find(),
+      this.repositoriesService.repositories.status.find(),
+      this.repositoriesService.repositories.priority.find(),
+    ]);
 
     return {
       identificationTypes,
@@ -50,6 +70,7 @@ export class AdminPanelService {
       tags,
       projectRoles,
       stauses,
+      priorities,
     };
   }
 
@@ -63,7 +84,7 @@ export class AdminPanelService {
     const repository =
       this.repositoriesService.repositories[element.toString()];
 
-    return this.repositoriesService.createEntity(repository, body);
+    return await this.repositoriesService.createEntity(repository, body);
   }
 
   async updateElement(
@@ -75,7 +96,11 @@ export class AdminPanelService {
     const repository =
       this.repositoriesService.repositories[element.toString()];
 
-    return this.repositoriesService.updateEntity(repository, body.id, body);
+    return await this.repositoriesService.updateEntity(
+      repository,
+      body.id,
+      body,
+    );
   }
 
   async getElementById(userId: string, element: string, id: number) {
@@ -83,7 +108,7 @@ export class AdminPanelService {
     const repository =
       this.repositoriesService.repositories[element.toString()];
 
-    const entity = this.repositoriesService.getOneEntityById<{ id: any }>(
+    const entity = await this.repositoriesService.getOneEntityById<{ id: any }>(
       repository,
       id,
     );
