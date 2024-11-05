@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProjectDto, UpdateProjectDto } from '../dtos/projects.dto';
+import {
+  CreateProjectDto,
+  PaginatedListProjectsParamsDto,
+  UpdateProjectDto,
+} from '../dtos/projects.dto';
 import { CrudProjectsService } from '../services/crudProjects.service';
 
 @Injectable()
@@ -42,5 +46,9 @@ export class CrudProjectsUseCase {
 
   async delete(id: number, userId: string) {
     await this._crudProjectsService.delete(id, userId);
+  }
+
+  async paginatedList(params: PaginatedListProjectsParamsDto) {
+    return await this._crudProjectsService.paginatedList(params);
   }
 }

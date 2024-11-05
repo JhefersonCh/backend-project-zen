@@ -3,6 +3,7 @@ import { TasksService } from '../services/tasks.service';
 import {
   CreateTaskDto,
   GetAllByProjectIdAndMemberIdBodyDto,
+  PaginatedListTasksParamsDto,
   UpdateManyStatusesDto,
   UpdateTaskDto,
 } from '../dtos/tasks.dto';
@@ -47,5 +48,9 @@ export class TasksUseCase {
 
   async deleteById(id: number) {
     await this.tasksService.deleteByParams({ id });
+  }
+
+  async paginatedList(params: PaginatedListTasksParamsDto) {
+    return await this.tasksService.paginatedList(params);
   }
 }

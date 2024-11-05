@@ -1,3 +1,5 @@
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
+import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { UpdateManyResults } from './../../shared/interfaces/results.interface';
 import { ProjectRepository } from './../../shared/repositories/project.repository';
@@ -21,10 +23,11 @@ import {
 } from '@nestjs/common';
 import {
   CreateTaskDto,
+  PaginatedListTasksParamsDto,
   UpdateManyStatusesBodyDto,
   UpdateTaskDto,
 } from '../dtos/tasks.dto';
-import { Connection } from 'typeorm';
+import { Between, Connection, Like } from 'typeorm';
 import { MembersService } from './members.service';
 import { TasksFiltersModel, TasksWhereModel } from '../models/params.model';
 
@@ -255,5 +258,62 @@ export class TasksService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async paginatedList(params: PaginatedListTasksParamsDto) {
+    const queryBuilder = this.tasksRepo.createQueryBuilder('task');
+    const skip = (params.page - 1) * params.perPage;
+    queryBuilder.skip(skip).take(params.perPage);
+
+    queryBuilder.orderBy('task.createdAt', params.order);
+
+    if (params.id) {
+      queryBuilder.andWhere('task.id = :id', { id: params.id });
+    }
+    if (params.userId) {
+      queryBuilder.leftJoinAndSelect('task.member', 'member');
+      queryBuilder.andWhere('member.userId = :userId', {
+        userId: params.userId,
+      });
+    }
+    if (params.projectId) {
+      queryBuilder.andWhere('task.projectId = :projectId', {
+        projectId: params.projectId,
+      });
+    }
+    if (params.priorityId) {
+      queryBuilder.andWhere('task.priorityId = :priorityId', {
+        priorityId: params.priorityId,
+      });
+    }
+    if (params.statusId) {
+      queryBuilder.andWhere('task.statusId = :statusId', {
+        statusId: params.statusId,
+      });
+    }
+    if (params.title) {
+      queryBuilder.andWhere('task.title LIKE :title', {
+        title: `%${params.title}%`,
+      });
+    }
+    if (params.description) {
+      queryBuilder.andWhere('task.description LIKE :description', {
+        description: `%${params.description}%`,
+      });
+    }
+    if (params.createdAtInit && params.createdAtEnd) {
+      queryBuilder.andWhere(
+        'task.createdAt BETWEEN :createdAtInit AND :createdAtEnd',
+        {
+          createdAtInit: params.createdAtInit,
+          createdAtEnd: params.createdAtEnd,
+        },
+      );
+    }
+
+    const [entities, itemCount] = await queryBuilder.getManyAndCount();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
+    return new ResponsePaginationDto(entities, pageMetaDto);
   }
 }

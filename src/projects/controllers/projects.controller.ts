@@ -1,3 +1,5 @@
+import { Projects } from './../../shared/entities/projects.entity';
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
 import {
   CREATED_MESSAGE,
   DELETED_MESSAGE,
@@ -24,6 +26,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -39,6 +42,7 @@ import {
   CreateProjectDto,
   GetOneProjectResponseDto,
   GetProjectsResponseDto,
+  PaginatedListProjectsParamsDto,
   ProjectsRelatedDataReponseDto,
   UpdateProjectDto,
 } from '../dtos/projects.dto';
@@ -59,6 +63,16 @@ export class ProjectsController {
     private readonly _crudCategoriesUC: CrudCategoriesUseCase,
     private readonly _projectsUC: ProjectsUseCase,
   ) {}
+
+  @Get('/paginated-list')
+  @ApiOkResponse({ type: ResponsePaginationDto<Projects> })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getPaginatedList(
+    @Query() params: PaginatedListProjectsParamsDto,
+  ): Promise<ResponsePaginationDto<Projects>> {
+    return await this._crudProjectsUC.paginatedList(params);
+  }
 
   @Get('/related-data')
   @ApiOkResponse({ type: ProjectsRelatedDataReponseDto })

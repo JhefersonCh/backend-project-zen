@@ -1,3 +1,4 @@
+import { ParamsPaginationDto } from './../../shared/dtos/pagination.dto';
 import { HttpStatus } from '@nestjs/common';
 import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { Categories } from './../../shared/entities/categories.entity';
@@ -9,6 +10,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
 import {
@@ -193,4 +195,50 @@ export class DeleteMemberFromProjectDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+}
+
+export class PaginatedListProjectsParamsDto extends ParamsPaginationDto {
+  @ApiProperty({ type: Number, example: 1, required: false })
+  @IsOptional()
+  @IsNumber()
+  id?: number;
+
+  @ApiProperty({ type: String, example: 'uuid', required: false })
+  @IsOptional()
+  @IsUUID()
+  userId?: string;
+
+  @ApiProperty({ type: String, example: 'Project Title', required: false })
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Project Description',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({
+    type: String,
+    example: '2022-01-01T12:00:00.000Z',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  createdAtInit?: Date;
+
+  @ApiProperty({
+    type: String,
+    example: '2022-01-01T12:00:00.000Z',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  createdAtEnd?: Date;
 }

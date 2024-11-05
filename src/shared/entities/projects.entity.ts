@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ProjectCategories } from './projectCategories.entity';
 import { Members } from './members.entity';
+import { Tasks } from './tasks.entity';
 
 @Entity({ name: 'Projects' })
 export class Projects {
@@ -57,6 +58,9 @@ export class Projects {
     (projectCategory) => projectCategory.project,
   )
   projectCategories: ProjectCategories[];
+
+  @OneToMany(() => Tasks, (task) => task.project)
+  tasks: Tasks[];
 
   @OneToMany(() => Members, (member) => member.project)
   members: Members[];

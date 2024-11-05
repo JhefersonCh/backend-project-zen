@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
+import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 import { MembersRepository } from './../../shared/repositories/members.repository';
 import { NOT_FOUND_RESPONSE } from './../../shared/constants/response.constant';
 import { Projects } from './../../shared/entities/projects.entity';
@@ -12,6 +15,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
+import { PaginatedListProjectsParamsDto } from '../dtos/projects.dto';
+import { Between, Like } from 'typeorm';
 
 @Injectable()
 export class CrudProjectsService {
@@ -162,5 +167,46 @@ export class CrudProjectsService {
     await this._projectCategoriesRepo.delete({ projectId: id });
     await this._membersRepo.delete({ projectId: id });
     await this._tasksService.deleteByParams({ projectId: id });
+  }
+
+  async paginatedList(params: PaginatedListProjectsParamsDto) {
+    const skip = (params.page - 1) * params.perPage;
+    const where = {};
+
+    params.id && Object.assign(where, { id: params.id });
+    params.userId &&
+      Object.assign(where, {
+        members: {
+          userId: params.userId,
+        },
+      });
+    params.title &&
+      Object.assign(where, {
+        title: Like(`%${params.title}%`),
+      });
+    params.description &&
+      Object.assign(where, {
+        description: Like(`%${params.description}%`),
+      });
+
+    params.createdAtInit &&
+      params.createdAtEnd &&
+      Object.assign(where, {
+        createdAt: Between(
+          new Date(params.createdAtInit),
+          new Date(params.createdAtEnd),
+        ),
+      });
+
+    const [entities, itemCount] = await this._projectsRepo.findAndCount({
+      where,
+      skip,
+      take: params.perPage,
+      order: { createdAt: params.order },
+    });
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
+
+    return new ResponsePaginationDto(entities, pageMetaDto);
   }
 }

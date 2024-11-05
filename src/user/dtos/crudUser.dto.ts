@@ -240,11 +240,11 @@ export class PaginatedListUsersParamsDto extends ParamsPaginationDto {
   @IsOptional()
   roleId?: number;
   @ApiProperty({
-    type: Number,
+    type: String,
     required: false,
     example: '123456789',
   })
-  @IsNumber()
+  @IsString()
   @IsOptional()
   identification?: string;
   @ApiProperty({

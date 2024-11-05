@@ -1,3 +1,4 @@
+import { ParamsPaginationDto } from './../../shared/dtos/pagination.dto';
 import { Tasks } from './../../shared/entities/tasks.entity';
 import { Tags } from './../../shared/entities/tags.entity';
 import { Status } from './../../shared/entities/status.entity';
@@ -369,4 +370,85 @@ export class UpdateManyStatusesDto {
   @IsArray()
   @IsNotEmpty()
   tasks: UpdateManyStatusesBodyDto[];
+}
+
+export class PaginatedListTasksParamsDto extends ParamsPaginationDto {
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @IsString()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @IsString()
+  @IsOptional()
+  projectId?: number;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'Task Title',
+  })
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @IsString()
+  @IsOptional()
+  priorityId?: number;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @IsString()
+  @IsOptional()
+  statusId?: number;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'Task description',
+  })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({
+    type: String,
+    example: '2022-01-01T12:00:00.000Z',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  createdAtInit?: Date;
+
+  @ApiProperty({
+    type: String,
+    example: '2022-01-01T12:00:00.000Z',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  createdAtEnd?: Date;
+
+  @ApiProperty({ type: String, example: 'uuid', required: false })
+  @IsString()
+  @IsOptional()
+  userId?: string;
 }

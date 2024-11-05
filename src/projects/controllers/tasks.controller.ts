@@ -1,3 +1,5 @@
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
+import { Tasks } from './../../shared/entities/tasks.entity';
 import { CREATED_MESSAGE } from './../../shared/constants/messages.constant';
 import { TasksUseCase } from './../useCases/tasks.UC';
 import {
@@ -30,6 +32,7 @@ import {
   GetAllByProjectIdAndMemberIdBodyDto,
   GetManyTasksResponse,
   GetTaskByIdResponse,
+  PaginatedListTasksParamsDto,
   TasksRelatedDataResponse,
   UpdateManyStatusesDto,
   UpdateTaskDto,
@@ -39,6 +42,16 @@ import {
 @ApiTags('Tareas')
 export class TasksController {
   constructor(private readonly tasksUseCase: TasksUseCase) {}
+
+  @Get('/paginated-list')
+  @ApiOkResponse({ type: ResponsePaginationDto<Tasks> })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getPaginatedList(
+    @Query() params: PaginatedListTasksParamsDto,
+  ): Promise<ResponsePaginationDto<Tasks>> {
+    return await this.tasksUseCase.paginatedList(params);
+  }
 
   @Get('/related-data')
   @ApiOkResponse({ type: TasksRelatedDataResponse })
