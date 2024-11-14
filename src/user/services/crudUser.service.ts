@@ -116,12 +116,16 @@ export class CrudUserService {
     const skip = (params.page - 1) * params.perPage;
     const where = {};
 
-    params.email && Object.assign(where, { email: params.email });
-    params.fullName && Object.assign(where, { fullName: params.fullName });
-    params.username && Object.assign(where, { username: params.username });
+    params.email && Object.assign(where, { email: Like(`%${params.email}%`) });
+    params.fullName &&
+      Object.assign(where, { fullName: Like(`%${params.fullName}%`) });
+    params.username &&
+      Object.assign(where, { username: Like(`%${params.username}%`) });
     params.roleId && Object.assign(where, { roleId: params.roleId });
     params.identification &&
-      Object.assign(where, { identification: params.identification });
+      Object.assign(where, {
+        identification: Like(`%${params.identification}%`),
+      });
     params.phone && Object.assign(where, { phone: params.phone });
     params.identificationTypeId &&
       Object.assign(where, {
