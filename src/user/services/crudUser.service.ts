@@ -26,7 +26,7 @@ import {
 import { UserFiltersModel } from '../models/user.model';
 import { Users } from 'src/shared/entities/users.entity';
 import { INVALID_ACCESS_DATA_MESSAGE } from 'src/auth/constants/messages.constants';
-import { Like } from 'typeorm';
+import { ILike, Like } from 'typeorm';
 import { IdentificationTypes } from 'src/shared/entities/identificationTypes.entity';
 
 @Injectable()
@@ -116,11 +116,11 @@ export class CrudUserService {
     const skip = (params.page - 1) * params.perPage;
     const where = {};
 
-    params.email && Object.assign(where, { email: Like(`%${params.email}%`) });
+    params.email && Object.assign(where, { email: ILike(`%${params.email}%`) });
     params.fullName &&
-      Object.assign(where, { fullName: Like(`%${params.fullName}%`) });
+      Object.assign(where, { fullName: ILike(`%${params.fullName}%`) });
     params.username &&
-      Object.assign(where, { username: Like(`%${params.username}%`) });
+      Object.assign(where, { username: ILike(`%${params.username}%`) });
     params.roleId && Object.assign(where, { roleId: params.roleId });
     params.identification &&
       Object.assign(where, {
@@ -135,10 +135,10 @@ export class CrudUserService {
     const searchConditions = [];
     if (params.search) {
       searchConditions.push(
-        { fullName: Like(`%${params.search}%`) },
-        { username: Like(`%${params.search}%`) },
+        { fullName: ILike(`%${params.search}%`) },
+        { username: ILike(`%${params.search}%`) },
         { identification: Like(`%${params.search}%`) },
-        { email: Like(`%${params.search}%`) },
+        { email: ILike(`%${params.search}%`) },
       );
     }
 
