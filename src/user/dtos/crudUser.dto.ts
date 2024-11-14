@@ -255,6 +255,15 @@ export class PaginatedListUsersParamsDto extends ParamsPaginationDto {
   @IsString()
   @IsOptional()
   phone?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: '1',
+  })
+  @IsString()
+  @IsOptional()
+  identificationTypeId?: number;
 }
 
 export interface CreateUserRelatedDataDto {

@@ -123,6 +123,10 @@ export class CrudUserService {
     params.identification &&
       Object.assign(where, { identification: params.identification });
     params.phone && Object.assign(where, { phone: params.phone });
+    params.identificationTypeId &&
+      Object.assign(where, {
+        identificationTypeId: params.identificationTypeId,
+      });
 
     const searchConditions = [];
     if (params.search) {
