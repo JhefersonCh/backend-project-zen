@@ -27,6 +27,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -47,6 +48,7 @@ import {
   CreateUserDto,
   PaginatedListUsersParamsDto,
   CreateUserRelatedDataReponseDto,
+  ChangePasswordDto,
 } from '../dtos/crudUser.dto';
 
 @Controller('user')
@@ -171,6 +173,22 @@ export class UserController {
       message: CREATED_MESSAGE,
       statusCode: HttpStatus.CREATED,
       data: rowId,
+    };
+  }
+
+  @Post('/change-password')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async changePassword(
+    @Body() body: ChangePasswordDto,
+    @Req() req,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.crudUserUseCase.changePassword(body, req.user.id);
+    return {
+      message: UPDATED_MESSAGE,
+      statusCode: HttpStatus.OK,
     };
   }
 }

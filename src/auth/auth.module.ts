@@ -1,3 +1,5 @@
+import { MailsService } from './../shared/service/mails.service';
+import { MailTemplateService } from './../shared/service/mail-template.service';
 import { RepositoriesService } from './../shared/service/repositories.service';
 import { StatusRepository } from './../shared/repositories/status.repository';
 import { PriorityRepository } from './../shared/repositories/priority.repository';
@@ -52,6 +54,8 @@ import { AccessSessionsRepository } from 'src/shared/repositories/accessSessions
     PriorityRepository,
     StatusRepository,
     RepositoriesService,
+    MailsService,
+    MailTemplateService,
   ],
   controllers: [AuthController],
 })

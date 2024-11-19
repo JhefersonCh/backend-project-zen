@@ -1,3 +1,6 @@
+import { NOT_FOUND_RESPONSE } from './../../shared/constants/response.constant';
+import { MailTemplateService } from './../../shared/service/mail-template.service';
+import { MailsService } from './../../shared/service/mails.service';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { PasswordService } from './../../user/services/password.service';
 import {
@@ -5,7 +8,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RefreshTokenBodyDto, SingInBodyDto } from '../dtos/auth.dto';
+import {
+  RecoveryPasswordBodyDto,
+  RefreshTokenBodyDto,
+  SingInBodyDto,
+} from '../dtos/auth.dto';
 import { CrudUserService } from 'src/user/services/crudUser.service';
 import { INVALID_ACCESS_DATA_MESSAGE } from '../constants/messages.constants';
 import { JwtService } from '@nestjs/jwt';
@@ -13,7 +20,6 @@ import { ConfigService } from '@nestjs/config';
 import { TokenPayloadModel } from '../models/auth.model';
 import { AccessSessionsService } from './accessSessions.service';
 import * as uuid from 'uuid';
-import { NOT_FOUND_RESPONSE } from 'src/shared/constants/response.constant';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +29,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly accessSessionsService: AccessSessionsService,
+    private readonly mailService: MailsService,
+    private readonly mailTemplateService: MailTemplateService,
   ) {}
   async signIn(body: SingInBodyDto) {
     const userExists = await this.crudUserService.findOneByParams(
@@ -174,5 +182,21 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     return user;
+  }
+
+  async recoveryPassword(body: RecoveryPasswordBodyDto) {
+    const user = await this.crudUserService.findOneByParams({
+      where: { email: body.email },
+    });
+    if (user) {
+      this.mailService.sendEmail({
+        to: user.email,
+        subject: 'Recuperación de contraseña',
+        body: this.mailTemplateService.recoveryPasswordTemplate(
+          'https://google.com',
+          user.fullName,
+        ),
+      });
+    }
   }
 }

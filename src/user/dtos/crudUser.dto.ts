@@ -283,3 +283,27 @@ export class CreateUserRelatedDataReponseDto implements BaseResponseDto {
   })
   data: CreateUserRelatedDataDto;
 }
+
+export class ChangePasswordDto {
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: '********',
+  })
+  @IsString()
+  oldPassword: string;
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: '********',
+  })
+  @IsString()
+  newPassword: string;
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: '********',
+  })
+  @IsString()
+  confirmNewPassword: string;
+}

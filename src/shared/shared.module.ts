@@ -36,6 +36,9 @@ import { ProjectRolesRepository } from './repositories/projectRol.repository';
 import { PriorityRepository } from './repositories/priority.repository';
 import { StatusRepository } from './repositories/status.repository';
 import { RepositoriesService } from './service/repositories.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailsService } from './service/mails.service';
+import { MailTemplateService } from './service/mail-template.service';
 
 @Module({})
 export class SharedModule {
@@ -84,6 +87,22 @@ export class SharedModule {
         PassportModule.register({
           defaultStrategy: 'jwt',
         }),
+        MailerModule.forRootAsync({
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            transport: {
+              host: configService.get<string>('mail.host'),
+              port: configService.get<number>('mail.port'),
+              secure: configService.get<boolean>('mail.secure'),
+              auth: {
+                user: configService.get<string>('mail.user'),
+                pass: configService.get<string>('mail.password'),
+              },
+              sender: configService.get<string>('mail.sender'),
+              to: configService.get<string>('mail.to'),
+            },
+          }),
+        }),
       ],
       controllers: [AdminPanelController],
       providers: [
@@ -104,6 +123,8 @@ export class SharedModule {
         PriorityRepository,
         StatusRepository,
         RepositoriesService,
+        MailsService,
+        MailTemplateService,
       ],
       exports: [],
     };

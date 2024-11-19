@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  RecoveryPasswordBodyDto,
   RefreshTokenBodyDto,
   SignOutBodyDto,
   SingInBodyDto,
@@ -20,5 +21,9 @@ export class AuthUseCase {
 
   async refreshToken(body: RefreshTokenBodyDto) {
     return await this.authService.refreshToken(body);
+  }
+
+  async recoveryPassword(body: RecoveryPasswordBodyDto) {
+    return await this.authService.recoveryPassword(body);
   }
 }

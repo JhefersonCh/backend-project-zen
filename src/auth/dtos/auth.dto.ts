@@ -1,6 +1,12 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { BaseResponseDto } from 'src/shared/dtos/response.dto';
 
 export class SignInResponseDto implements BaseResponseDto {
@@ -116,4 +122,11 @@ export class AuthTokenResponseDto {
   })
   @IsOptional()
   accessSessionId?: string;
+}
+
+export class RecoveryPasswordBodyDto {
+  @ApiProperty({ example: 'john.doe@gmail.com', required: true })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }

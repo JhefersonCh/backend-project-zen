@@ -18,6 +18,7 @@ import { DUPLICATED_RESPONSE } from 'src/shared/constants/response.constant';
 import { UserRepository } from 'src/shared/repositories/user.repository';
 import { PasswordService } from './password.service';
 import {
+  ChangePasswordDto,
   CreateUserRelatedDataDto,
   PaginatedListUsersParamsDto,
   RegisterDto,
@@ -33,7 +34,7 @@ import { IdentificationTypes } from 'src/shared/entities/identificationTypes.ent
 export class CrudUserService {
   constructor(
     private userRepository: UserRepository,
-    private readonly passwrodService: PasswordService,
+    private readonly passwordService: PasswordService,
     private readonly repositoriesService: RepositoriesService,
   ) {}
 
@@ -76,7 +77,7 @@ export class CrudUserService {
 
     const createdUser = await this.userRepository.save({
       ...userWithRoleId,
-      password: await this.passwrodService.generateHash(user.password),
+      password: await this.passwordService.generateHash(user.password),
     });
     return { rowId: createdUser.id };
   }
@@ -152,5 +153,34 @@ export class CrudUserService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
 
     return new ResponsePaginationDto(entities, pageMetaDto);
+  }
+
+  async changePassword(body: ChangePasswordDto, userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+    }
+
+    if (body.newPassword !== body.confirmNewPassword) {
+      throw new HttpException(PASSWORDS_NOT_MATCH, HttpStatus.CONFLICT);
+    }
+    const passwordMatch = await this.passwordService.compare(
+      body.oldPassword,
+      user.password,
+    );
+
+    if (!passwordMatch) {
+      throw new HttpException(
+        'Contraseña incorrecta.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    await this.userRepository.update(
+      { id: userId },
+      { password: await this.passwordService.generateHash(body.newPassword) },
+    );
   }
 }

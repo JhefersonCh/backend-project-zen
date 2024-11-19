@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import {
   InvalidAccessDataResponseDto,
+  RecoveryPasswordBodyDto,
   RefreshTokenBodyDto,
   SignInResponseDto,
   SignOutBodyDto,
@@ -72,6 +73,20 @@ export class AuthController {
     return {
       statusCode: HttpStatus.OK,
       data,
+    };
+  }
+
+  @Post('/recovery-password')
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+  })
+  async recoveryPassword(
+    @Body() body: RecoveryPasswordBodyDto,
+  ): Promise<{ statusCode: number; message: string }> {
+    await this.authUseCase.recoveryPassword(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Correo enviado correctamente',
     };
   }
 }

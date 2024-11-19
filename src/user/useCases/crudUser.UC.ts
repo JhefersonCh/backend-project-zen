@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CrudUserService } from '../services/crudUser.service';
 import {
+  ChangePasswordDto,
   PaginatedListUsersParamsDto,
   RegisterDto,
   UpdateUserDto,
@@ -35,5 +36,9 @@ export class CrudUserUseCase {
 
   async getRelatedDataToCreate(isRegister: boolean) {
     return await this.userService.getRelatedDataToCreate(isRegister);
+  }
+
+  async changePassword(body: ChangePasswordDto, userId: string) {
+    return await this.userService.changePassword(body, userId);
   }
 }

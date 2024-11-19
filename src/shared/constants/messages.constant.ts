@@ -11,3 +11,5 @@ export const DELETE_RELATED_MESSAGE =
 export const GET_MESSAGE = 'Información recuperada correctamente';
 export const UPLOADED_MESSAGE = 'Archivo subido correctamente';
 export const PASSWORDS_NOT_MATCH = 'Las contraseñas no coinciden';
+export const UNAUTHORIZED_PASSWORD_MESSAGE =
+  'No tienes acceso para modificar las contraseñas de otro usuario.';
