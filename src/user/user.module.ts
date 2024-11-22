@@ -1,3 +1,10 @@
+import { MembersRepository } from './../shared/repositories/members.repository';
+import { MembersService } from './../projects/services/members.service';
+import { TaskTagsRepository } from './../shared/repositories/taskTags.repository';
+import { ProjectRepository } from './../shared/repositories/project.repository';
+import { TaskRepository } from './../shared/repositories/task.repository';
+import { ProjectsService } from './../projects/services/projects.service';
+import { TasksService } from 'src/projects/services/tasks.service';
 import { RepositoriesService } from './../shared/service/repositories.service';
 import { StatusRepository } from './../shared/repositories/status.repository';
 import { PriorityRepository } from './../shared/repositories/priority.repository';
@@ -17,6 +24,9 @@ import { CrudUserUseCase } from './useCases/crudUser.UC';
 import { PasswordService } from './services/password.service';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ProfileController } from './controllers/profile.controller';
+import { ProfileUseCase } from './useCases/profile.UC';
+import { ProfileService } from './services/profile.service';
 
 @Module({
   imports: [
@@ -24,7 +34,7 @@ import { PassportModule } from '@nestjs/passport';
     SharedModule.forRoot(),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [UserController],
+  controllers: [UserController, ProfileController],
   providers: [
     CrudUserService,
     UserRepository,
@@ -40,6 +50,15 @@ import { PassportModule } from '@nestjs/passport';
     PriorityRepository,
     StatusRepository,
     RepositoriesService,
+    ProfileUseCase,
+    ProfileService,
+    TasksService,
+    ProjectsService,
+    TaskRepository,
+    ProjectRepository,
+    TaskTagsRepository,
+    MembersService,
+    MembersRepository,
   ],
 })
 export class UserModule {}

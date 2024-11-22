@@ -316,4 +316,45 @@ export class TasksService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
     return new ResponsePaginationDto(entities, pageMetaDto);
   }
+
+  async getTasksCountForUser(userId: string): Promise<{
+    total: number;
+    completed: number;
+    inProgress: number;
+    notStarted: number;
+  }> {
+    try {
+      const result = await this.tasksRepo
+        .createQueryBuilder('task')
+        .select([
+          'COUNT(task.id) AS total',
+          'SUM(CASE WHEN status.title = :completed THEN 1 ELSE 0 END) AS completed',
+          'SUM(CASE WHEN status.title = :inProgress THEN 1 ELSE 0 END) AS inProgress',
+          'SUM(CASE WHEN status.title = :notStarted THEN 1 ELSE 0 END) AS notStarted',
+        ])
+        .leftJoin('task.member', 'member')
+        .leftJoin('task.status', 'status')
+        .where('member.userId = :userId', { userId })
+        .andWhere('task.deletedAt IS NULL')
+        .setParameters({
+          completed: 'Terminada',
+          inProgress: 'En progreso',
+          notStarted: 'No iniciada',
+        })
+        .getRawOne();
+
+      return {
+        total: Number(result.total) || 0,
+        completed: Number(result.completed) || 0,
+        inProgress: Number(result.inprogress) || 0,
+        notStarted: Number(result.notstarted) || 0,
+      };
+    } catch (error) {
+      console.error('Error al obtener el conteo de tareas:', error);
+      throw new HttpException(
+        'Error al obtener el conteo de tareas para el usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ProjectRepository } from './../../shared/repositories/project.repository';
 import { UserRepository } from './../../shared/repositories/user.repository';
 import { ProjectRolesRepository } from '../../shared/repositories/projectRol.repository';
 import { ProjectRoles } from './../../shared/entities/projectRoles.entity';
@@ -15,6 +17,7 @@ export class ProjectsService {
     private readonly _memberRepo: MembersRepository,
     private readonly _projectRolesRepo: ProjectRolesRepository,
     private readonly _userRepo: UserRepository,
+    private readonly _projectsRepo: ProjectRepository,
   ) {}
 
   async getRelatedData(): Promise<{
@@ -91,5 +94,38 @@ export class ProjectsService {
       );
     }
     await this._memberRepo.delete(body);
+  }
+
+  async getProjectsCountForUser(
+    userId: string,
+  ): Promise<{ total: number; leader: number }> {
+    try {
+      const result = await this._projectsRepo
+        .createQueryBuilder('project')
+        .select([
+          'COUNT(project.id) AS total',
+          'SUM(CASE WHEN member.userId = :userId AND projectRole.roleName = :leaderRole THEN 1 ELSE 0 END) AS leader',
+        ])
+        .leftJoin('project.members', 'member')
+        .leftJoin('member.projectRole', 'projectRole')
+        .where('project.deletedAt IS NULL')
+        .andWhere('member.userId = :userId')
+        .setParameters({
+          userId,
+          leaderRole: 'Líder',
+        })
+        .getRawOne();
+
+      return {
+        total: parseInt(result.total, 10) || 0,
+        leader: parseInt(result.leader, 10) || 0,
+      };
+    } catch (error) {
+      console.error('Error al obtener el conteo de proyectos:', error);
+      throw new HttpException(
+        'Error al obtener el conteo de proyectos para el usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
