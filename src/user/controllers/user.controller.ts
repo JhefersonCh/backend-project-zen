@@ -49,12 +49,26 @@ import {
   PaginatedListUsersParamsDto,
   CreateUserRelatedDataReponseDto,
   ChangePasswordDto,
+  RecoveryPasswordDto,
 } from '../dtos/crudUser.dto';
 
 @Controller('user')
 @ApiTags('Usuarios')
 export class UserController {
   constructor(private readonly crudUserUseCase: CrudUserUseCase) {}
+
+  @Patch('/recovery-password')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  async recoveryPassword(
+    @Body() body: RecoveryPasswordDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.crudUserUseCase.recoveryPassword(body);
+    return {
+      message: UPDATED_MESSAGE,
+      statusCode: HttpStatus.OK,
+    };
+  }
 
   @Get('/register/related-data')
   @ApiOkResponse({ type: CreateUserRelatedDataReponseDto })

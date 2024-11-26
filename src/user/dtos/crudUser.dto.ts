@@ -284,20 +284,14 @@ export class CreateUserRelatedDataReponseDto implements BaseResponseDto {
   data: CreateUserRelatedDataDto;
 }
 
-export class ChangePasswordDto {
+export class ChangePasswordBaseDto {
   @ApiProperty({
     type: String,
     required: true,
     example: '********',
   })
   @IsString()
-  oldPassword: string;
-  @ApiProperty({
-    type: String,
-    required: true,
-    example: '********',
-  })
-  @IsString()
+  @IsNotEmpty()
   newPassword: string;
   @ApiProperty({
     type: String,
@@ -305,5 +299,28 @@ export class ChangePasswordDto {
     example: '********',
   })
   @IsString()
+  @IsNotEmpty()
   confirmNewPassword: string;
+}
+
+export class ChangePasswordDto extends ChangePasswordBaseDto {
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: '********',
+  })
+  @IsString()
+  @IsNotEmpty()
+  oldPassword: string;
+}
+
+export class RecoveryPasswordDto extends ChangePasswordBaseDto {
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'uuid',
+  })
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

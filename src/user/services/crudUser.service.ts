@@ -21,6 +21,7 @@ import {
   ChangePasswordDto,
   CreateUserRelatedDataDto,
   PaginatedListUsersParamsDto,
+  RecoveryPasswordDto,
   RegisterDto,
   UpdateUserDto,
 } from '../dtos/crudUser.dto';
@@ -182,5 +183,25 @@ export class CrudUserService {
       { id: userId },
       { password: await this.passwordService.generateHash(body.newPassword) },
     );
+  }
+
+  async recoveryPassword(body: RecoveryPasswordDto) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: body.userId },
+      });
+      if (!user) {
+        throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      }
+      if (body.newPassword !== body.confirmNewPassword) {
+        throw new HttpException(PASSWORDS_NOT_MATCH, HttpStatus.CONFLICT);
+      }
+      await this.userRepository.update(
+        { id: body.userId },
+        { password: await this.passwordService.generateHash(body.newPassword) },
+      );
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

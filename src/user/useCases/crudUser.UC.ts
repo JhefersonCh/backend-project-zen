@@ -3,6 +3,7 @@ import { CrudUserService } from '../services/crudUser.service';
 import {
   ChangePasswordDto,
   PaginatedListUsersParamsDto,
+  RecoveryPasswordDto,
   RegisterDto,
   UpdateUserDto,
 } from '../dtos/crudUser.dto';
@@ -40,5 +41,9 @@ export class CrudUserUseCase {
 
   async changePassword(body: ChangePasswordDto, userId: string) {
     return await this.userService.changePassword(body, userId);
+  }
+
+  async recoveryPassword(body: RecoveryPasswordDto) {
+    return await this.userService.recoveryPassword(body);
   }
 }
