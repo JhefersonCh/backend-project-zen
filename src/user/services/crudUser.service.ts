@@ -97,11 +97,12 @@ export class CrudUserService {
   async findOneByParams(
     params: UserFiltersModel,
     login: boolean = false,
+    errors: boolean = true,
   ): Promise<Users> {
     const user = await this.userRepository.findOne({
       where: { ...params.where },
     });
-    if (!user) {
+    if (!user && errors) {
       if (!login) {
         throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
       } else {

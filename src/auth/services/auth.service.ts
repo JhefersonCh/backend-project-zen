@@ -185,9 +185,16 @@ export class AuthService {
   }
 
   async recoveryPassword(body: RecoveryPasswordBodyDto) {
-    const user = await this.crudUserService.findOneByParams({
-      where: { email: body.email },
-    });
+    const user = await this.crudUserService.findOneByParams(
+      {
+        where: { email: body.email },
+      },
+      false,
+      false,
+    );
+    if (!user) {
+      return;
+    }
     const token: string = await this.crudUserService.generateResetToken(
       user.id,
     );
