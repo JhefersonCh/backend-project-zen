@@ -193,7 +193,7 @@ export class AuthService {
         to: user.email,
         subject: 'Recuperación de contraseña',
         body: this.mailTemplateService.recoveryPasswordTemplate(
-          'https://google.com',
+          `https://project-zen.netlify.app/${user.id}/change-password`,
           user.fullName,
         ),
       });
