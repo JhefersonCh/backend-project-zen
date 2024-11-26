@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MailTemplateService {
-  recoveryPasswordTemplate(resetLink: string, userName: string) {
+  recoveryPasswordTemplate(
+    resetLink: string,
+    userName: string,
+    resetToken: string,
+  ) {
     const template = `
           
             <div style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
@@ -26,7 +30,7 @@ export class MailTemplateService {
                     
                     <!-- Botón -->
                     <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
-                      <a href="${resetLink}" 
+                      <a href="${resetLink}?token=${resetToken}" 
                          style="background-color: #805ad5; 
                                 color: white; 
                                 padding: 12px 30px; 

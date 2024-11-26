@@ -188,13 +188,17 @@ export class AuthService {
     const user = await this.crudUserService.findOneByParams({
       where: { email: body.email },
     });
+    const token: string = await this.crudUserService.generateResetToken(
+      user.id,
+    );
     if (user) {
       this.mailService.sendEmail({
         to: user.email,
         subject: 'Recuperación de contraseña',
         body: this.mailTemplateService.recoveryPasswordTemplate(
-          `https://project-zen.netlify.app/${user.id}/change-password`,
+          `https://project-zen.netlify.app/auth/${user.id}/change-password`,
           user.fullName,
+          token,
         ),
       });
     }

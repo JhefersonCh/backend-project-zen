@@ -1,5 +1,6 @@
 import { RepositoriesService } from './../../shared/service/repositories.service';
 import { Roles } from './../../shared/entities/roles.entity';
+import * as crypto from 'crypto';
 
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
@@ -188,10 +189,16 @@ export class CrudUserService {
   async recoveryPassword(body: RecoveryPasswordDto) {
     try {
       const user = await this.userRepository.findOne({
-        where: { id: body.userId },
+        where: { id: body.userId, resetToken: body.resetToken },
       });
       if (!user) {
         throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      }
+      if (user.resetTokenExpiry < new Date()) {
+        throw new HttpException(
+          'Token inválido o expirado',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       if (body.newPassword !== body.confirmNewPassword) {
         throw new HttpException(PASSWORDS_NOT_MATCH, HttpStatus.CONFLICT);
@@ -203,5 +210,18 @@ export class CrudUserService {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async generateResetToken(userId: string): Promise<string> {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + 1);
+
+    await this.userRepository.update(userId, {
+      resetToken: token,
+      resetTokenExpiry: expiryDate,
+    });
+
+    return token;
   }
 }

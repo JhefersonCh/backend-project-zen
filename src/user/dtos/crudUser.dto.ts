@@ -323,4 +323,12 @@ export class RecoveryPasswordDto extends ChangePasswordBaseDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'token',
+  })
+  @IsString()
+  @IsNotEmpty()
+  resetToken: string;
 }

@@ -97,6 +97,12 @@ export class Users {
   })
   deletedAt?: Date;
 
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  resetToken?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetTokenExpiry?: Date;
+
   @OneToMany(() => Members, (member) => member.user)
   Members: Members[];
 }
