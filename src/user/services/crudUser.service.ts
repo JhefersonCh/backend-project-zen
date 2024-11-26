@@ -205,7 +205,11 @@ export class CrudUserService {
       }
       await this.userRepository.update(
         { id: body.userId },
-        { password: await this.passwordService.generateHash(body.newPassword) },
+        {
+          password: await this.passwordService.generateHash(body.newPassword),
+          resetToken: null,
+          resetTokenExpiry: null,
+        },
       );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

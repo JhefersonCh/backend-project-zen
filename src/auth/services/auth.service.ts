@@ -192,7 +192,7 @@ export class AuthService {
       user.id,
     );
     if (user) {
-      this.mailService.sendEmail({
+      await this.mailService.sendEmail({
         to: user.email,
         subject: 'Recuperación de contraseña',
         body: this.mailTemplateService.recoveryPasswordTemplate(
