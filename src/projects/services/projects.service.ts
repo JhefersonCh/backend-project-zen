@@ -8,7 +8,7 @@ import { CategoryRepository } from './../../shared/repositories/category.reposit
 import { Categories } from './../../shared/entities/categories.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MemberToProjectDto } from '../dtos/projects.dto';
-import { Equal, Not } from 'typeorm';
+import { Between, Equal, Not } from 'typeorm';
 
 @Injectable()
 export class ProjectsService {
@@ -127,5 +127,24 @@ export class ProjectsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async getProjectsByUserAndTime(
+    userId: string,
+    params: { startDate: Date; endDate: Date },
+  ) {
+    const result = await this._memberRepo
+      .createQueryBuilder('member')
+      .select("TO_CHAR(member.createdAt, 'YYYY-MM') AS monthYear")
+      .addSelect('COUNT(*) AS count')
+      .where('member.userId = :userId', { userId })
+      .andWhere('member.createdAt BETWEEN :startDate AND :endDate', {
+        startDate: params.startDate,
+        endDate: params.endDate,
+      })
+      .groupBy('monthYear')
+      .getRawMany();
+
+    return result;
   }
 }

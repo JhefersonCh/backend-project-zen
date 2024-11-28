@@ -20,8 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(req, payload: TokenPayloadModel): Promise<TokenPayloadModel> {
-    console.log('ola');
-
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
     const user = await this.authService.validateSession({
