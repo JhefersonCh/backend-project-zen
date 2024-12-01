@@ -57,4 +57,19 @@ export class MembersService {
   async findOneById(id: number): Promise<Members> {
     return await this._membersRepo.findOne({ where: { id } });
   }
+
+  async getMembersByProjects(userId: string) {
+    const result = await this._membersRepo
+      .createQueryBuilder('member')
+      .select(['project.title AS title', 'COUNT(allMembers.id) AS memberCount'])
+      .innerJoin('member.project', 'project')
+      .innerJoin('member.projectRole', 'projectRole')
+      .innerJoin('project.members', 'allMembers')
+      .where('projectRole.roleName = :roleName', { roleName: 'Líder' })
+      .andWhere('member.userId = :userId', { userId })
+      .groupBy('project.id, project.title')
+      .getRawMany();
+
+    return result;
+  }
 }

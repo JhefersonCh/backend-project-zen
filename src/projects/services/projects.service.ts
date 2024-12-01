@@ -147,4 +147,37 @@ export class ProjectsService {
 
     return result;
   }
+
+  async getCompletedVsInProgress(userId: string) {
+    const currentDate = new Date();
+    const result = await this._projectsRepo
+      .createQueryBuilder('project')
+      .select([
+        'COUNT(CASE WHEN project.finishDate <= :current THEN 1 END) AS completed',
+        'COUNT(CASE WHEN project.finishDate >= :current THEN 1 END) AS inProgress',
+      ])
+      .innerJoin('project.members', 'member')
+      .where('member.userId = :userId', { userId })
+      .andWhere('project.deletedAt IS NULL')
+      .setParameters({
+        current: currentDate,
+      })
+      .getRawOne();
+    return result;
+  }
+
+  async verifyIfUserIsProjectLeader(
+    userId: string,
+    projectId: string,
+  ): Promise<boolean> {
+    const userIsLeader = await this._memberRepo.findOne({
+      where: {
+        userId,
+        project: { id: Number(projectId) },
+      },
+      relations: ['projectRole'],
+    });
+
+    return userIsLeader?.projectRole?.roleName === 'Líder';
+  }
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class ProjectReportDto {
+export class DateParamsForReportDto {
   @ApiProperty({
     type: String,
     description: 'Fecha de inicio',
@@ -23,4 +23,16 @@ export class ProjectReportDto {
   @IsNotEmpty()
   @IsString()
   endDate: Date;
+}
+
+export class MembersByProjectReportDto {
+  @ApiProperty({
+    type: String,
+    description: 'ID del proyecto',
+    example: 1,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  projectId: string;
 }

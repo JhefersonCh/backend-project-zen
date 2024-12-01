@@ -14,6 +14,19 @@ export interface BarChartOptions {
   };
 }
 
+export interface PolarChartsOptions {
+  series: number[];
+  labels?: string[];
+  title?: {
+    text: string;
+    align?: string;
+    margin?: number;
+    style?: {
+      fontSize?: string;
+    };
+  };
+}
+
 @Injectable()
 export class FormatReportsService {
   private readonly monthLabels: Record<number, string> = {
@@ -31,8 +44,9 @@ export class FormatReportsService {
     12: 'Diciembre',
   };
 
-  public formatProjectsByTime(
+  public formatReportsByTime(
     data: { monthyear: string; count: string }[],
+    type: 'projects' | 'tasks',
   ): Partial<BarChartOptions> {
     const categories: string[] = [];
     const counts: number[] = [];
@@ -47,7 +61,7 @@ export class FormatReportsService {
     return {
       series: [
         {
-          name: 'Proyectos',
+          name: type === 'projects' ? 'Proyectos' : 'Tareas',
           data: counts,
         },
       ],
@@ -56,7 +70,98 @@ export class FormatReportsService {
       },
       colors: this.generateRandomColors(data.length),
       title: {
-        text: 'Proyectos por Mes',
+        text: `${type === 'projects' ? 'Proyectos' : 'Tareas'} por Mes`,
+        align: 'center',
+        margin: 50,
+        style: {
+          fontSize: '26px',
+        },
+      },
+    };
+  }
+
+  public formatCompletedVsInProgress(data: {
+    completed: number;
+    inProgress: number;
+  }): Partial<PolarChartsOptions> {
+    return {
+      series: [data.completed, data.inProgress],
+      labels: ['Finalizados', 'En Progreso'],
+      title: {
+        text: 'Proyectos Finalizados y En Progreso',
+        align: 'center',
+        margin: 50,
+        style: {
+          fontSize: '26px',
+        },
+      },
+    };
+  }
+
+  public formatReportsByStatus(data: {
+    notstarted: string;
+    inprogress: string;
+    completed: string;
+    reviewed: string;
+  }): Partial<PolarChartsOptions> {
+    return {
+      series: [
+        parseInt(data.notstarted),
+        parseInt(data.inprogress),
+        parseInt(data.completed),
+        parseInt(data.reviewed),
+      ],
+      labels: ['No Iniciadas', 'En Progreso', 'Finalizadas', 'Revisadas'],
+      title: {
+        text: 'Tareas por Estado',
+        align: 'center',
+        margin: 50,
+        style: {
+          fontSize: '26px',
+        },
+      },
+    };
+  }
+
+  public formatReportsByMembersByProject(
+    data: {
+      title: string;
+      memberCount: string;
+    }[],
+  ): Partial<BarChartOptions> {
+    return {
+      series: [
+        {
+          name: 'Miembros',
+          data: data.map((item) => parseInt(item.memberCount)),
+        },
+      ],
+      xaxis: {
+        categories: data.map((item) => item.title),
+      },
+      colors: this.generateRandomColors(data.length),
+      title: {
+        text: 'Miembros por Proyecto',
+        align: 'center',
+        margin: 50,
+        style: {
+          fontSize: '26px',
+        },
+      },
+    };
+  }
+
+  public formatReportsByMembersProgress(
+    data: {
+      memberName: string;
+      progress: string;
+    }[],
+  ) {
+    return {
+      series: data.map((item) => item.progress),
+      labels: data.map((item) => item.memberName),
+      title: {
+        text: 'Progreso de Miembros por Proyecto',
         align: 'center',
         margin: 50,
         style: {

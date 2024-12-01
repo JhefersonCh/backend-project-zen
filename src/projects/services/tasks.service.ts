@@ -357,4 +357,68 @@ export class TasksService {
       );
     }
   }
+
+  async getTasksByTime(
+    userId: string,
+    params: { startDate: Date; endDate: Date },
+  ) {
+    const result = await this.tasksRepo
+      .createQueryBuilder('task')
+      .select("TO_CHAR(task.createdAt, 'YYYY-MM') AS monthYear")
+      .addSelect('COUNT(*) AS count')
+      .innerJoin('task.member', 'member')
+      .where('member.userId = :userId', { userId })
+      .andWhere('task.createdAt BETWEEN :startDate AND :endDate', {
+        startDate: params.startDate,
+        endDate: params.endDate,
+      })
+      .groupBy("TO_CHAR(task.createdAt, 'YYYY-MM')")
+      .getRawMany();
+
+    return result;
+  }
+
+  async getTasksByStatus(userId: string) {
+    const result = await this.tasksRepo
+      .createQueryBuilder('task')
+      .select([
+        "COUNT(CASE WHEN status.title = 'No iniciada' THEN 1 END) as notStarted",
+        "COUNT(CASE WHEN status.title = 'En progreso' THEN 1 END) as inProgress",
+        "COUNT(CASE WHEN status.title = 'Terminada' THEN 1 END) as completed",
+        "COUNT(CASE WHEN status.title = 'Revisada' THEN 1 END) as reviewed",
+      ])
+      .innerJoin('task.member', 'member')
+      .innerJoin('task.status', 'status')
+      .where('member.userId = :userId', { userId })
+      .getRawOne();
+
+    return result;
+  }
+
+  async getProgressByProject(projectId: string) {
+    const qb = await this.tasksRepo
+      .createQueryBuilder('task')
+      .select([
+        'member.id AS memberId',
+        'user.fullName AS memberName',
+        'COUNT(task.id) AS totalTasks',
+        "COUNT(CASE WHEN status.title IN ('Terminada', 'Revisada') THEN 1 END) AS completedTasks",
+      ])
+      .innerJoin('task.member', 'member')
+      .innerJoin('task.status', 'status')
+      .innerJoin('member.user', 'user')
+      .where('member.projectId = :projectId', { projectId })
+      .groupBy('member.id, user.fullName');
+
+    const rawResult = await qb.getRawMany();
+
+    const result = {
+      members: rawResult.map((item) => ({
+        memberName: item.membername,
+        progress: `${item.completedtasks} / ${item.totaltasks}`,
+      })),
+    };
+
+    return result;
+  }
 }
