@@ -59,7 +59,7 @@ export class MembersService {
   }
 
   async getMembersByProjects(userId: string) {
-    const result = await this._membersRepo
+    const rowResults = await this._membersRepo
       .createQueryBuilder('member')
       .select(['project.title AS title', 'COUNT(allMembers.id) AS memberCount'])
       .innerJoin('member.project', 'project')
@@ -69,6 +69,11 @@ export class MembersService {
       .andWhere('member.userId = :userId', { userId })
       .groupBy('project.id, project.title')
       .getRawMany();
+
+    const result = rowResults.map((row) => ({
+      title: row.title,
+      memberCount: row.membercount,
+    }));
 
     return result;
   }

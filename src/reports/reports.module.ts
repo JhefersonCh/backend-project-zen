@@ -1,3 +1,5 @@
+import { UserRepository } from './../shared/repositories/user.repository';
+import { TasksService } from './../projects/services/tasks.service';
 import { MembersService } from './../projects/services/members.service';
 import { TagRepository } from './../shared/repositories/tag.repository';
 import { TaskTagsRepository } from './../shared/repositories/taskTags.repository';
@@ -6,9 +8,7 @@ import { StatusRepository } from './../shared/repositories/status.repository';
 import { PriorityRepository } from './../shared/repositories/priority.repository';
 import { ProjectCategoriesRepository } from './../shared/repositories/projectCategories.repository';
 import { ProjectRepository } from './../shared/repositories/project.repository';
-import { UserRepository } from 'src/shared/repositories/user.repository';
 import { ProjectRolesRepository } from './../shared/repositories/projectRol.repository';
-import { TasksService } from 'src/projects/services/tasks.service';
 import { MembersRepository } from './../shared/repositories/members.repository';
 import { CategoryRepository } from './../shared/repositories/category.repository';
 import { CrudProjectsService } from './../projects/services/crudProjects.service';

@@ -150,7 +150,7 @@ export class ProjectsService {
 
   async getCompletedVsInProgress(userId: string) {
     const currentDate = new Date();
-    const result = await this._projectsRepo
+    const rawResult = await this._projectsRepo
       .createQueryBuilder('project')
       .select([
         'COUNT(CASE WHEN project.finishDate <= :current THEN 1 END) AS completed',
@@ -163,6 +163,12 @@ export class ProjectsService {
         current: currentDate,
       })
       .getRawOne();
+
+    const result = {
+      completed: parseInt(rawResult.completed, 10) || 0,
+      inProgress: parseInt(rawResult.inprogress, 10) || 0,
+    };
+
     return result;
   }
 

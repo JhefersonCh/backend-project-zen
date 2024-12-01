@@ -1,5 +1,5 @@
+import { TasksService } from './../../projects/services/tasks.service';
 import { MembersService } from './../../projects/services/members.service';
-import { TasksService } from 'src/projects/services/tasks.service';
 import { HttpException, Injectable } from '@nestjs/common';
 import { ProjectsService } from './../../projects/services/projects.service';
 import { ProjectReportModel } from '../models/projectReports.model';

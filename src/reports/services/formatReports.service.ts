@@ -85,7 +85,7 @@ export class FormatReportsService {
     inProgress: number;
   }): Partial<PolarChartsOptions> {
     return {
-      series: [data.completed, data.inProgress],
+      series: [Number(data.completed), Number(data.inProgress)],
       labels: ['Finalizados', 'En Progreso'],
       title: {
         text: 'Proyectos Finalizados y En Progreso',
