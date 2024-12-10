@@ -18,4 +18,7 @@ export interface TasksWhereModel {
   memberId?: number;
   statusId?: number;
   id?: number;
+  member?: {
+    userId?: string;
+  };
 }

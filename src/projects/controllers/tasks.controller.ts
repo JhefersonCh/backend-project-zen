@@ -18,6 +18,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -154,6 +155,18 @@ export class TasksController {
     @Body() body: UpdateManyStatusesDto,
   ): Promise<UpdateManyRecordsResponseDto> {
     const data = await this.tasksUseCase.updateMany(body);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
+  }
+
+  @Get('/get/calendar')
+  @ApiOkResponse({ type: GetManyTasksResponse })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async getTasksToCalendar(@Req() req): Promise<GetManyTasksResponse> {
+    const data = await this.tasksUseCase.findAllByUserId(req.user.id);
     return {
       statusCode: HttpStatus.OK,
       data,

@@ -218,6 +218,23 @@ export class TasksService {
     return tasks;
   }
 
+  async findAllByUserId(userId: string): Promise<Tasks[]> {
+    const queryBuilder = this.tasksRepo.createQueryBuilder('task');
+    queryBuilder
+      .select([
+        'task.id as id',
+        'task.title as title',
+        'task.description as description',
+        'task.deadline as deadline',
+      ])
+      .leftJoin('task.priority', 'priority')
+      .leftJoin('task.status', 'status')
+      .leftJoin('task.member', 'member')
+      .where('member.userId = :userId', { userId });
+
+    return await queryBuilder.getRawMany();
+  }
+
   async deleteByParams(params: TasksWhereModel): Promise<void> {
     if (params.id) {
       const taskExist = await this.tasksRepo.findOne({
@@ -301,12 +318,12 @@ export class TasksService {
         description: `%${params.description}%`,
       });
     }
-    if (params.createdAtInit && params.createdAtEnd) {
+    if (params.dateInit && params.dateEnd) {
       queryBuilder.andWhere(
         'task.createdAt BETWEEN :createdAtInit AND :createdAtEnd',
         {
-          createdAtInit: params.createdAtInit,
-          createdAtEnd: params.createdAtEnd,
+          createdAtInit: params.dateInit,
+          createdAtEnd: params.dateEnd,
         },
       );
     }

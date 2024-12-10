@@ -23,6 +23,10 @@ export class TasksUseCase {
     await this.tasksService.update(body);
   }
 
+  async findAllByUserId(userId: string) {
+    return await this.tasksService.findAllByUserId(userId);
+  }
+
   async updateMany(body: UpdateManyStatusesDto) {
     return await this.tasksService.updateStatuses(body?.tasks);
   }

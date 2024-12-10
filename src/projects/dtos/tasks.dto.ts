@@ -435,7 +435,7 @@ export class PaginatedListTasksParamsDto extends ParamsPaginationDto {
   })
   @IsOptional()
   @IsString()
-  createdAtInit?: Date;
+  dateInit?: Date;
 
   @ApiProperty({
     type: String,
@@ -445,7 +445,7 @@ export class PaginatedListTasksParamsDto extends ParamsPaginationDto {
   })
   @IsOptional()
   @IsString()
-  createdAtEnd?: Date;
+  dateEnd?: Date;
 
   @ApiProperty({ type: String, example: 'uuid', required: false })
   @IsString()
