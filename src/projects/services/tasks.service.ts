@@ -322,8 +322,8 @@ export class TasksService {
       queryBuilder.andWhere(
         'task.createdAt BETWEEN :createdAtInit AND :createdAtEnd',
         {
-          createdAtInit: params.dateInit,
-          createdAtEnd: params.dateEnd,
+          createdAtInit: new Date(params.dateInit),
+          createdAtEnd: new Date(params.dateEnd),
         },
       );
     }
