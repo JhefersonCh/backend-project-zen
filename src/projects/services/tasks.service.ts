@@ -226,6 +226,8 @@ export class TasksService {
         'task.title as title',
         'task.description as description',
         'task.deadline as deadline',
+        'task.createdAt as createdAt',
+        'task.projectId as projectId',
       ])
       .leftJoin('task.priority', 'priority')
       .leftJoin('task.status', 'status')
