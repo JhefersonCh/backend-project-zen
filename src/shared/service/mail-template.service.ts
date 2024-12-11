@@ -1,5 +1,5 @@
 import { Tasks } from '../entities/tasks.entity';
-import { Users } from './../entities/users.entity';
+import { Users } from '../entities/users.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

@@ -29,4 +29,13 @@ export class MailerGeneratorService {
       to: payload.email,
     });
   }
+
+  async sendPqrEmail(email: string, name: string, body: string) {
+    await this.mailService.sendEmail({
+      subject: `PQRs - ${name ? name : ''} - ${email}`,
+      body,
+      from: email,
+      to: 'projectzen.infousers@gmail.com',
+    });
+  }
 }

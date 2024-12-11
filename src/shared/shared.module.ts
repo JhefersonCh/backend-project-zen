@@ -29,16 +29,19 @@ import { RolesRepository } from './repositories/rol.repository';
 import { IdentificationTypesRepository } from './repositories/identificationType.repository';
 import { AdminPanelController } from './controllers/adminPanel.controller';
 import { AdminPanelUseCase } from './useCases/adminPanel.UC';
-import { AdminPanelService } from './service/adminPanel.service';
 import { CategoryRepository } from './repositories/category.repository';
 import { TagRepository } from './repositories/tag.repository';
 import { ProjectRolesRepository } from './repositories/projectRol.repository';
 import { PriorityRepository } from './repositories/priority.repository';
 import { StatusRepository } from './repositories/status.repository';
-import { RepositoriesService } from './service/repositories.service';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AdminPanelService } from './service/adminPanel.service';
+import { RepositoriesService } from './service/repositories.service';
 import { MailsService } from './service/mails.service';
 import { MailTemplateService } from './service/mail-template.service';
+import { PqrsController } from './controllers/pqrs.controller';
+import { PqrsService } from './service/pqrs.service';
+import { MailerGeneratorService } from './service/mailerGenerator.service';
 
 @Module({})
 export class SharedModule {
@@ -104,7 +107,7 @@ export class SharedModule {
           }),
         }),
       ],
-      controllers: [AdminPanelController],
+      controllers: [AdminPanelController, PqrsController],
       providers: [
         JwtStrategy,
         AuthService,
@@ -125,6 +128,8 @@ export class SharedModule {
         RepositoriesService,
         MailsService,
         MailTemplateService,
+        PqrsService,
+        MailerGeneratorService,
       ],
       exports: [],
     };
