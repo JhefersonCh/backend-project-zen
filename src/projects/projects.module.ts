@@ -1,3 +1,6 @@
+import { MailsService } from './../shared/service/mails.service';
+import { MailTemplateService } from './../shared/service/mail-template.service';
+import { MailerGeneratorService } from '../shared/service/mailerGenerator.service';
 import { TagRepository } from './../shared/repositories/tag.repository';
 import { TaskTagsRepository } from './../shared/repositories/taskTags.repository';
 import { TaskRepository } from './../shared/repositories/task.repository';
@@ -25,11 +28,14 @@ import { MembersService } from './services/members.service';
 import { TasksController } from './controllers/tasks.controller';
 import { TasksUseCase } from './useCases/tasks.UC';
 import { TasksService } from './services/tasks.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ProjectsListener } from './events/project.listener';
 
 @Module({
   imports: [
     // SharedModule.forRoot(),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    EventEmitterModule.forRoot(),
   ],
   controllers: [ProjectsController, MembersController, TasksController],
   providers: [
@@ -54,6 +60,10 @@ import { TasksService } from './services/tasks.service';
     TaskRepository,
     TaskTagsRepository,
     TagRepository,
+    MailerGeneratorService,
+    MailTemplateService,
+    MailsService,
+    ProjectsListener,
   ],
   exports: [],
 })

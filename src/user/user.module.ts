@@ -1,3 +1,6 @@
+import { MailsService } from './../shared/service/mails.service';
+import { MailTemplateService } from './../shared/service/mail-template.service';
+import { MailerGeneratorService } from './../shared/service/mailerGenerator.service';
 import { MembersRepository } from './../shared/repositories/members.repository';
 import { MembersService } from './../projects/services/members.service';
 import { TaskTagsRepository } from './../shared/repositories/taskTags.repository';
@@ -59,6 +62,9 @@ import { ProfileService } from './services/profile.service';
     TaskTagsRepository,
     MembersService,
     MembersRepository,
+    MailerGeneratorService,
+    MailTemplateService,
+    MailsService,
   ],
 })
 export class UserModule {}

@@ -15,6 +15,8 @@ import { StatusRepository } from './../../shared/repositories/status.repository'
 import { PriorityRepository } from './../../shared/repositories/priority.repository';
 import { Priorities } from './../../shared/entities/priorities.entity';
 import { Status } from './../../shared/entities/status.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
 import {
   ConflictException,
   HttpException,
@@ -42,6 +44,7 @@ export class TasksService {
     private readonly connection: Connection,
     private readonly projectsRepo: ProjectRepository,
     private readonly membersService: MembersService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
   async getRelatedData(): Promise<{
     priorities: Priorities[];
@@ -93,6 +96,11 @@ export class TasksService {
           ),
         );
       }
+
+      this.eventEmitter.emit('assing-task.event', {
+        taskId: rowId,
+        memberId: body.memberId,
+      });
 
       await queryRunner.commitTransaction();
 

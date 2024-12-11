@@ -1,3 +1,6 @@
+import { MailsService } from './../shared/service/mails.service';
+import { MailTemplateService } from './../shared/service/mail-template.service';
+import { MailerGeneratorService } from './../shared/service/mailerGenerator.service';
 import { UserRepository } from './../shared/repositories/user.repository';
 import { TasksService } from './../projects/services/tasks.service';
 import { MembersService } from './../projects/services/members.service';
@@ -42,6 +45,9 @@ import { FormatReportsService } from './services/formatReports.service';
     TagRepository,
     MembersService,
     FormatReportsService,
+    MailerGeneratorService,
+    MailTemplateService,
+    MailsService,
   ],
   exports: [],
 })

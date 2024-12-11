@@ -12,6 +12,9 @@ import { join } from 'path';
 import { ProjectsModule } from './projects/projects.module';
 import { SocialModule } from './social/social.module';
 import { ReportsModule } from './reports/reports.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CronTasksModule } from './cron-tasks/cron-tasks.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -28,6 +31,11 @@ import { ReportsModule } from './reports/reports.module';
     ProjectsModule,
     SocialModule,
     ReportsModule,
+    ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+    }),
+    CronTasksModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
