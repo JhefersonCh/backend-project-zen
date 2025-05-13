@@ -1,4 +1,4 @@
-# 🧠 ProjectZen Backend - API REST para Gestión de Proyectos Grupales
+# 🧠 Backend - ProjectZen  - API REST para Gestión de Proyectos Grupales
 
 Este repositorio contiene el backend de **ProjectZen**, una plataforma completa para la gestión colaborativa de proyectos. Expone una API REST robusta que permite manejar autenticación, usuarios, proyectos, tareas, reportes, notificaciones por correo, y más.
 
